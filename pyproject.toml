@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ena-api-client"
+dynamic = ["version"]
+description = "Typed Python client for the ENA Webin Submission and Reports APIs."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Tim Rozday", email = "tim.rozday@gmail.com" }]
+license = { text = "Apache-2.0" }
+keywords = ["ena", "webin", "ebi", "bioinformatics", "submission"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "httpx>=0.27",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-httpx>=0.30",
+    "black>=24.0",
+    "ruff>=0.5",
+    "pre-commit>=3.7",
+]
+
+[project.urls]
+Homepage = "https://github.com/timrozday/ena-api-client"
+Issues = "https://github.com/timrozday/ena-api-client/issues"
+
+[tool.setuptools.packages.find]
+include = ["ena_api*"]
+
+[tool.setuptools_scm]
+fallback_version = "0.1.0"
+
+[tool.black]
+line-length = 120
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules -v"
+testpaths = ["tests", "ena_api"]
