@@ -65,6 +65,7 @@ def parse_receipt(xml_bytes: bytes) -> SubmissionReceipt:
                 accession=entity.get("accession", ""),
                 status=entity.get("status", ""),
                 holdUntilDate=entity.get("holdUntilDate", ""),
+                entity_type=tag,
             )
             ext = entity.find("EXT_ID")
             if ext is not None:

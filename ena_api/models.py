@@ -14,12 +14,20 @@ _ALLOW_EXTRA = ConfigDict(extra="ignore", populate_by_name=True)
 class AccessionRecord(BaseModel):
     """A single accession returned in a submission receipt.
 
+    Attributes:
+        entity_type: The XML tag from the receipt that produced this record
+            (e.g. ``"PROJECT"``, ``"SAMPLE"``, ``"SUBMISSION"``).  Use this to
+            distinguish data-object accessions from the submission-envelope
+            accession (``entity_type == "SUBMISSION"``).
+
     Example:
-        >>> rec = AccessionRecord(alias="s1", accession="ERS1", status="PRIVATE")
+        >>> rec = AccessionRecord(alias="s1", accession="ERS1", status="PRIVATE", entity_type="SAMPLE")
         >>> rec.accession
         'ERS1'
         >>> rec.external_accession
         ''
+        >>> rec.entity_type
+        'SAMPLE'
     """
 
     model_config = _ALLOW_EXTRA
@@ -30,6 +38,7 @@ class AccessionRecord(BaseModel):
     hold_until_date: str = Field("", alias="holdUntilDate")
     external_accession: str = ""
     external_type: str = ""
+    entity_type: str = ""
 
 
 class SubmissionReceipt(BaseModel):

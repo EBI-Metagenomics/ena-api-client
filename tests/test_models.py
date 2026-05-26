@@ -23,6 +23,7 @@ class TestAccessionRecord:
         assert rec.hold_until_date == ""
         assert rec.external_accession == ""
         assert rec.external_type == ""
+        assert rec.entity_type == ""
 
     def test_hold_until_alias(self):
         rec = AccessionRecord(holdUntilDate="2030-01-01")

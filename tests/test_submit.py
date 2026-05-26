@@ -21,6 +21,10 @@ class TestParseReceipt:
         assert sample.status == "PRIVATE"
         assert sample.external_accession == "SAMEA00000001"
         assert sample.external_type == "biosample"
+        assert sample.entity_type == "SAMPLE"
+        submission = r.accessions[1]
+        assert submission.alias == "sub-1"
+        assert submission.entity_type == "SUBMISSION"
         assert r.messages == ["INFO: This submission is a TEST."]
         assert r.errors == []
 
