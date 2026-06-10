@@ -70,6 +70,22 @@ while (receipt := client.submit.poll(job_id)) is None:
 print(receipt.success)
 ```
 
+### Submission actions
+
+Cancel, suppress, kill, hold, and release existing objects without
+hand-building the action XML:
+
+```python
+receipt = client.submit.cancel("ERZ1234567")           # remove a private object
+receipt = client.submit.suppress("ERS9000001")         # hide a public object
+receipt = client.submit.hold("ERS9000001", "2026-12-31")  # (re)set the release date
+receipt = client.submit.release("ERS9000001")          # make a private object public
+receipt = client.submit.kill("ERZ1234567")             # admin-only, irreversible
+```
+
+Each accepts an optional `alias` keyword for the generated submission
+envelope; one is auto-generated if omitted.
+
 ### Listing records
 
 ```python
@@ -94,6 +110,10 @@ Each method returns a list of typed Pydantic models with fields such as
 | POST | `/ena/submit/webin-v2/submit` | `client.submit.xml(xml_bytes)` |
 | POST | `/ena/submit/webin-v2/submit/queue` | `client.submit.xml_async(xml_bytes)` |
 | GET | `/ena/submit/webin-v2/submit/poll/{job_id}` | `client.submit.poll(job_id)` |
+
+`cancel`, `suppress`, `kill`, `hold`, and `release` (see [Submission
+actions](#submission-actions)) all build a small action XML document and
+POST it to `/ena/submit/webin-v2/submit` as well.
 
 ### Webin Reports API
 
