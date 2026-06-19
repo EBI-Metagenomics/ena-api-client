@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 
-_ALLOW_EXTRA = ConfigDict(extra="ignore", populate_by_name=True)
+_ALLOW_EXTRA = ConfigDict(extra="allow", populate_by_name=True)
 
 
 class AccessionRecord(BaseModel):
@@ -89,6 +89,8 @@ class RunReport(_BaseReport):
     """A run record from ``/report/runs``."""
 
     experiment_accession: str = ""
+    study_accession: str = ""
+    sample_accession: str = ""
 
 
 class ExperimentReport(_BaseReport):
@@ -96,6 +98,7 @@ class ExperimentReport(_BaseReport):
 
     title: str = ""
     study_accession: str = ""
+    sample_accession: str = ""
 
 
 class AnalysisReport(_BaseReport):
