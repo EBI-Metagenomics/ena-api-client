@@ -91,3 +91,16 @@ RUNS_REPORT_JSON = [
         }
     }
 ]
+
+EXPERIMENTS_REPORT_JSON = [
+    {
+        "report": {
+            "experimentAlias": "run-1",
+            "experimentAccession": "ERX9000001",
+            "experimentTitle": "Experiment one",
+            "studyAccession": "ERP000001",
+            "sampleAccession": "ERS9000001",
+            "releaseStatus": "PRIVATE",
+        }
+    }
+]
