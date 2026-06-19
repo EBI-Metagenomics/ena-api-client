@@ -7,7 +7,7 @@ import pytest
 
 from ena_api import WebinClient
 
-from .conftest import PROJECTS_REPORT_JSON, RUNS_REPORT_JSON, SAMPLES_REPORT_JSON
+from .conftest import EXPERIMENTS_REPORT_JSON, PROJECTS_REPORT_JSON, RUNS_REPORT_JSON, SAMPLES_REPORT_JSON
 
 _BASE = "https://www.ebi.ac.uk/ena/submit/report"
 
@@ -93,10 +93,62 @@ class TestListRuns:
             url=f"{_BASE}/runs?format=json&max-results=5000",
             json=RUNS_REPORT_JSON,
         )
+        httpx_mock.add_response(
+            method="GET",
+            url=f"{_BASE}/experiments?format=json&max-results=5000",
+            json=[],
+        )
         runs = webin_client.reports.list_runs()
         assert len(runs) == 1
         assert runs[0].accession == "ERR9000001"
         assert runs[0].experiment_accession == "ERX9000001"
+
+    def test_enriched_with_experiment_lineage(self, httpx_mock, webin_client: WebinClient):
+        """Run reports often lack study/sample accession; list_runs() should
+        join against list_experiments() to fill them in."""
+        httpx_mock.add_response(
+            method="GET",
+            url=f"{_BASE}/runs?format=json&max-results=5000",
+            json=RUNS_REPORT_JSON,
+        )
+        httpx_mock.add_response(
+            method="GET",
+            url=f"{_BASE}/experiments?format=json&max-results=5000",
+            json=EXPERIMENTS_REPORT_JSON,
+        )
+        runs = webin_client.reports.list_runs()
+        assert len(runs) == 1
+        assert runs[0].experiment_accession == "ERX9000001"
+        assert runs[0].study_accession == "ERP000001"
+        assert runs[0].sample_accession == "ERS9000001"
+
+    def test_no_runs_skips_experiment_fetch(self, httpx_mock, webin_client: WebinClient):
+        """No runs means no possible join — avoid an unnecessary HTTP call."""
+        httpx_mock.add_response(
+            method="GET",
+            url=f"{_BASE}/runs?format=json&max-results=5000",
+            json=[],
+        )
+        assert webin_client.reports.list_runs() == []
+
+
+class TestFindRunsByExperimentAlias:
+    def test_matches_existing_alias(self, httpx_mock, webin_client: WebinClient):
+        httpx_mock.add_response(
+            method="GET",
+            url=f"{_BASE}/experiments?format=json&max-results=5000",
+            json=EXPERIMENTS_REPORT_JSON,
+        )
+        httpx_mock.add_response(
+            method="GET",
+            url=f"{_BASE}/runs?format=json&max-results=5000",
+            json=RUNS_REPORT_JSON,
+        )
+        found = webin_client.reports.find_runs_by_experiment_alias({"run-1", "missing-alias"})
+        assert found == {"run-1": {"experiment_accession": "ERX9000001", "run_accession": "ERR9000001"}}
+
+    def test_no_aliases_skips_http_calls(self, webin_client: WebinClient):
+        assert webin_client.reports.find_runs_by_experiment_alias(set()) == {}
 
 
 class TestOtherEntities:

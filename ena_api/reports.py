@@ -58,10 +58,23 @@ def _coerce(record: dict[str, Any], model_cls: type[T]) -> T:
     yet anticipate is still visible to callers instead of silently dropped.
     """
     field_names = set(model_cls.model_fields.keys())
+    # Keys reserved for other typed fields this model declares (e.g. an
+    # ExperimentReport row's "studyAccession" foreign key) — the generic
+    # "accession" field must not steal one of these just because it appears
+    # earlier in its own alias tuple than this record's own entity-typed key
+    # (e.g. "experimentAccession").
+    reserved_keys: set[str] = set()
+    for field in field_names:
+        if field != "accession":
+            reserved_keys.update(_REPORT_FIELD_ALIASES.get(field, ()))
+
     out: dict[str, Any] = {}
     consumed_keys: set[str] = set()
     for field in field_names:
-        for key in _REPORT_FIELD_ALIASES.get(field, (field,)):
+        candidates = _REPORT_FIELD_ALIASES.get(field, (field,))
+        if field == "accession":
+            candidates = tuple(k for k in candidates if k not in reserved_keys)
+        for key in candidates:
             if key in record and record[key] not in (None, ""):
                 out[field] = record[key]
                 consumed_keys.add(key)
@@ -116,8 +129,29 @@ class ReportsProxy:
         return [_coerce(r, SampleReport) for r in self._fetch("samples", max_results)]
 
     def list_runs(self, max_results: int = _DEFAULT_MAX_RESULTS) -> list[RunReport]:
-        """List runs owned by the Webin account."""
-        return [_coerce(r, RunReport) for r in self._fetch("runs", max_results)]
+        """List runs owned by the Webin account.
+
+        The Reports API's ``/report/runs`` rows often carry only
+        ``experiment_accession``, leaving ``study_accession``/``sample_accession``
+        blank — those live on the run's experiment instead. This method joins
+        against ``list_experiments()`` and fills them in whenever the run's own
+        report didn't already supply them, so callers always get full lineage.
+        """
+        runs = [_coerce(r, RunReport) for r in self._fetch("runs", max_results)]
+        if not runs:
+            return runs
+        experiments_by_accession = {
+            exp.accession: exp for exp in self.list_experiments(max_results) if exp.accession
+        }
+        for run in runs:
+            experiment = experiments_by_accession.get(run.experiment_accession)
+            if experiment is None:
+                continue
+            if not run.study_accession:
+                run.study_accession = experiment.study_accession
+            if not run.sample_accession:
+                run.sample_accession = experiment.sample_accession
+        return runs
 
     def list_experiments(self, max_results: int = _DEFAULT_MAX_RESULTS) -> list[ExperimentReport]:
         """List experiments owned by the Webin account."""
@@ -130,3 +164,40 @@ class ReportsProxy:
     def list_files(self, max_results: int = _DEFAULT_MAX_RESULTS) -> list[FileReport]:
         """List files submitted under the Webin account."""
         return [_coerce(r, FileReport) for r in self._fetch("files", max_results)]
+
+    def find_runs_by_experiment_alias(
+        self, aliases: set[str], *, max_results: int = _DEFAULT_MAX_RESULTS
+    ) -> dict[str, dict[str, str]]:
+        """Find existing runs by their experiment's alias.
+
+        A reads submission registers an experiment (carrying the alias the
+        caller controls) plus a run. To support idempotent/resumable
+        submission — "does a run for alias X already exist?" — this looks up
+        each alias among the account's experiments and maps it to both
+        accessions. Returns ``{alias: {"experiment_accession": ...,
+        "run_accession": ...}}`` for the aliases that exist; aliases with no
+        matching experiment are omitted. Mirrors the alias-matching concept
+        ``ena_common.find_duplicates_by_alias_title`` uses for studies/samples,
+        generalised to the two-hop experiment→run relationship.
+        """
+        if not aliases:
+            return {}
+        experiments = self.list_experiments(max_results)
+        # Raw (unenriched) runs are enough here — only experiment_accession and
+        # accession are needed, both already present without the list_runs()
+        # study/sample join, which would just re-fetch list_experiments again.
+        runs = [_coerce(r, RunReport) for r in self._fetch("runs", max_results)]
+
+        runs_by_experiment: dict[str, str] = {}
+        for run in runs:
+            if run.experiment_accession and run.accession and run.experiment_accession not in runs_by_experiment:
+                runs_by_experiment[run.experiment_accession] = run.accession
+
+        found: dict[str, dict[str, str]] = {}
+        for exp in experiments:
+            if exp.alias in aliases and exp.accession:
+                found[exp.alias] = {
+                    "experiment_accession": exp.accession,
+                    "run_accession": runs_by_experiment.get(exp.accession, ""),
+                }
+        return found
