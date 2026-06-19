@@ -37,9 +37,10 @@ _REPORT_FIELD_ALIASES: Final[dict[str, tuple[str, ...]]] = {
     "secondary_accession": ("secondaryAccession", "secondaryId"),
     "title": ("title", "studyTitle", "sampleTitle", "experimentTitle", "analysisTitle"),
     "status": ("releaseStatus", "status"),
-    "experiment_accession": ("experimentAccession",),
-    "study_accession": ("studyAccession",),
-    "run_accession": ("runAccession",),
+    "experiment_accession": ("experimentAccession", "experimentId"),
+    "study_accession": ("studyAccession", "studyId"),
+    "sample_accession": ("sampleAccession", "sampleId"),
+    "run_accession": ("runAccession", "runId"),
     "filename": ("filename", "fileName", "name"),
     "checksum": ("checksum", "md5"),
     "checksum_method": ("checksumMethod", "checksum_method"),
@@ -49,14 +50,25 @@ T = TypeVar("T", bound=BaseModel)
 
 
 def _coerce(record: dict[str, Any], model_cls: type[T]) -> T:
-    """Build a model instance from a flat report dict, trying common key aliases."""
+    """Build a model instance from a flat report dict, trying common key aliases.
+
+    Any raw key that doesn't map to a known field is passed through unchanged
+    (relies on the model's ``extra="allow"`` config to keep it in
+    ``model_dump()``), so a Reports API field name this alias table doesn't
+    yet anticipate is still visible to callers instead of silently dropped.
+    """
     field_names = set(model_cls.model_fields.keys())
     out: dict[str, Any] = {}
+    consumed_keys: set[str] = set()
     for field in field_names:
         for key in _REPORT_FIELD_ALIASES.get(field, (field,)):
             if key in record and record[key] not in (None, ""):
                 out[field] = record[key]
+                consumed_keys.add(key)
                 break
+    for key, value in record.items():
+        if key not in consumed_keys and key not in out:
+            out[key] = value
     return model_cls.model_validate(out)
 
 
