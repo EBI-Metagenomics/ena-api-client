@@ -10,7 +10,7 @@ import pytest
 from ena_api import SubmissionReceipt, WebinClient, parse_receipt
 from ena_api.submit import _build_action_xml
 
-from .conftest import RECEIPT_FAILURE_XML, RECEIPT_SUCCESS_XML
+from .conftest import RECEIPT_FAILURE_XML, RECEIPT_SUCCESS_XML, RECEIPT_WARNING_FAILURE_XML
 
 _SUBMIT_URL = "https://www.ebi.ac.uk/ena/submit/webin-v2/submit"
 
@@ -38,7 +38,14 @@ class TestParseReceipt:
         assert r.success is False
         assert r.accessions == []
         assert r.messages == []
+        assert r.warnings == []
         assert r.errors == ["ERROR: Sample alias 'sample-1' already exists."]
+
+    def test_warning_only_failure_receipt(self):
+        r = parse_receipt(RECEIPT_WARNING_FAILURE_XML)
+        assert r.success is False
+        assert r.warnings == ["WARNING: Study title 'MIMICC' is not sufficiently unique."]
+        assert r.errors == []
 
     def test_missing_success_attribute_defaults_false(self):
         xml = b"<?xml version='1.0'?><RECEIPT/>"
