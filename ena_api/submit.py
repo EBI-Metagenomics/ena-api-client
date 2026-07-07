@@ -52,10 +52,12 @@ def parse_receipt(xml_bytes: bytes) -> SubmissionReceipt:
     success = root.get("success", "false").lower() == "true"
 
     messages: list[str] = []
+    warnings: list[str] = []
     errors: list[str] = []
     msgs_el = root.find("MESSAGES")
     if msgs_el is not None:
         messages = [f"INFO: {info.text}" for info in msgs_el.findall("INFO") if info.text]
+        warnings = [f"WARNING: {warn.text}" for warn in msgs_el.findall("WARNING") if warn.text]
         errors = [f"ERROR: {err.text}" for err in msgs_el.findall("ERROR") if err.text]
 
     accessions: list[AccessionRecord] = []
@@ -78,6 +80,7 @@ def parse_receipt(xml_bytes: bytes) -> SubmissionReceipt:
         success=success,
         accessions=accessions,
         messages=messages,
+        warnings=warnings,
         errors=errors,
     )
 

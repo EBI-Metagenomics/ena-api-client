@@ -48,6 +48,7 @@ class SubmissionReceipt(BaseModel):
         success: True iff the receipt root carried ``success="true"``.
         accessions: One entry per ``<SAMPLE>``/``<PROJECT>``/``<STUDY>``/etc.
         messages: ``INFO`` messages from the receipt's ``<MESSAGES>`` block.
+        warnings: ``WARNING`` messages from the receipt's ``<MESSAGES>`` block.
         errors: ``ERROR`` messages from the receipt's ``<MESSAGES>`` block.
 
     Example:
@@ -59,6 +60,7 @@ class SubmissionReceipt(BaseModel):
     success: bool = False
     accessions: list[AccessionRecord] = Field(default_factory=list)
     messages: list[str] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
     errors: list[str] = Field(default_factory=list)
 
 

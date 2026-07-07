@@ -48,6 +48,14 @@ RECEIPT_FAILURE_XML = b"""<?xml version="1.0" encoding="UTF-8"?>
 </RECEIPT>
 """
 
+RECEIPT_WARNING_FAILURE_XML = b"""<?xml version="1.0" encoding="UTF-8"?>
+<RECEIPT receiptDate="2025-01-01T00:00:00.000Z" submissionFile="sub.xml" success="false">
+  <MESSAGES>
+    <WARNING>Study title 'MIMICC' is not sufficiently unique.</WARNING>
+  </MESSAGES>
+</RECEIPT>
+"""
+
 PROJECTS_REPORT_JSON = [
     {
         "report": {
