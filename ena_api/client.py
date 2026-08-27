@@ -6,6 +6,7 @@ from typing import Final
 
 import httpx
 
+from .browser import BrowserProxy
 from .config import WebinConfig
 from .reports import ReportsProxy
 from .submit import SubmitProxy
@@ -16,7 +17,8 @@ _DEFAULT_TIMEOUT: Final = 120.0
 class WebinClient:
     """Authenticated ENA Webin API client.
 
-    Wraps the Webin v2 Submission API and Webin Reports API. Credentials are
+    Wraps the Webin v2 Submission API, the Webin Reports API and the
+    read-only ENA Browser API. Credentials are
     loaded from the ``ENA_WEBIN`` / ``ENA_WEBIN_PASSWORD`` environment
     variables unless an explicit :class:`WebinConfig` is supplied.
 
@@ -51,6 +53,7 @@ class WebinClient:
         )
         self._submit = SubmitProxy(self._http, self.config.submit_url)
         self._reports = ReportsProxy(self._http, self.config.reports_url)
+        self._browser = BrowserProxy(self._http, self.config.browser_url)
 
     @property
     def submit(self) -> SubmitProxy:
@@ -61,6 +64,11 @@ class WebinClient:
     def reports(self) -> ReportsProxy:
         """Access the Webin Reports API."""
         return self._reports
+
+    @property
+    def browser(self) -> BrowserProxy:
+        """Access the ENA Browser API (a record's current XML)."""
+        return self._browser
 
     def close(self) -> None:
         """Close the underlying HTTP connection pool."""
