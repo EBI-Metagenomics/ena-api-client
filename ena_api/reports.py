@@ -16,6 +16,7 @@ from .models import (
     AnalysisReport,
     ExperimentReport,
     FileReport,
+    RunProcessReport,
     RunReport,
     SampleReport,
     StudyReport,
@@ -40,7 +41,10 @@ _REPORT_FIELD_ALIASES: Final[dict[str, tuple[str, ...]]] = {
     "experiment_accession": ("experimentAccession", "experimentId"),
     "study_accession": ("studyAccession", "studyId"),
     "sample_accession": ("sampleAccession", "sampleId"),
-    "run_accession": ("runAccession", "runId"),
+    "run_accession": ("runAccession", "runId", "id"),
+    "process_status": ("processStatus", "process_status"),
+    "process_date": ("processDate", "process_date"),
+    "error_message": ("errorMessage", "error_message", "errorMessages"),
     "filename": ("filename", "fileName", "name"),
     "checksum": ("checksum", "md5"),
     "checksum_method": ("checksumMethod", "checksum_method"),
@@ -99,14 +103,14 @@ class ReportsProxy:
         self._http = http
         self._base_url = base_url
 
-    def _fetch(self, entity: str, max_results: int) -> list[dict[str, Any]]:
+    def _fetch(self, entity: str, max_results: int, **extra: Any) -> list[dict[str, Any]]:
         """Issue ``GET /report/{entity}`` and return the unwrapped report dicts.
 
         Returns ``[]`` on 404 (no records yet); raises ``PermissionError`` on
         401/403; raises ``httpx.HTTPStatusError`` on other 4xx/5xx.
         """
         url = f"{self._base_url}/{entity}"
-        params = {"format": "json", "max-results": max_results}
+        params: dict[str, Any] = {"format": "json", "max-results": max_results, **extra}
         response = self._http.get(url, params=params)
 
         if response.status_code == 404:
@@ -152,6 +156,19 @@ class ReportsProxy:
             if not run.sample_accession:
                 run.sample_accession = experiment.sample_accession
         return runs
+
+    def list_run_processes(
+        self, max_results: int = _DEFAULT_MAX_RESULTS, *, process_status: str | None = None
+    ) -> list[RunProcessReport]:
+        """List the data-file processing status of the account's runs.
+
+        Registering a run and archiving its read files are two different
+        events: ``/report/runs`` answers "does ENA have this run?", this
+        answers "has ENA finished processing its files?". Optionally filtered
+        server-side to one ``process_status``.
+        """
+        extra = {"process-status": process_status} if process_status else {}
+        return [_coerce(r, RunProcessReport) for r in self._fetch("run-process", max_results, **extra)]
 
     def list_experiments(self, max_results: int = _DEFAULT_MAX_RESULTS) -> list[ExperimentReport]:
         """List experiments owned by the Webin account."""

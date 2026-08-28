@@ -7,7 +7,13 @@ import pytest
 
 from ena_api import WebinClient
 
-from .conftest import EXPERIMENTS_REPORT_JSON, PROJECTS_REPORT_JSON, RUNS_REPORT_JSON, SAMPLES_REPORT_JSON
+from .conftest import (
+    EXPERIMENTS_REPORT_JSON,
+    PROJECTS_REPORT_JSON,
+    RUN_PROCESS_REPORT_JSON,
+    RUNS_REPORT_JSON,
+    SAMPLES_REPORT_JSON,
+)
 
 _BASE = "https://www.ebi.ac.uk/ena/submit/report"
 
@@ -187,3 +193,25 @@ class TestEntriesWithoutReport:
         projects = webin_client.reports.list_projects()
         assert len(projects) == 1
         assert projects[0].alias == "ok"
+
+
+class TestListRunProcesses:
+    def test_parses_processing_status(self, httpx_mock, webin_client: WebinClient):
+        httpx_mock.add_response(
+            method="GET",
+            url=f"{_BASE}/run-process?format=json&max-results=5000",
+            json=RUN_PROCESS_REPORT_JSON,
+        )
+        processes = webin_client.reports.list_run_processes()
+        assert [p.run_accession for p in processes] == ["ERR9000001", "ERR9000002"]
+        assert processes[0].process_status == "COMPLETED"
+        assert processes[0].process_date == "2026-01-02T03:04:05"
+        assert processes[1].error_message == "File checksum mismatch"
+
+    def test_status_filter_is_sent_to_ena(self, httpx_mock, webin_client: WebinClient):
+        httpx_mock.add_response(
+            method="GET",
+            url=f"{_BASE}/run-process?format=json&max-results=5000&process-status=IN_PROGRESS",
+            json=[],
+        )
+        assert webin_client.reports.list_run_processes(process_status="IN_PROGRESS") == []

@@ -13,6 +13,7 @@ current XML, patch it, and send it back (see
 from __future__ import annotations
 
 import re
+from collections.abc import Sequence
 from typing import Final
 
 import httpx
@@ -66,11 +67,44 @@ class BrowserProxy:
         """
         if not is_accession(accession):
             raise ValueError(f"Not a plausible accession: {accession!r}")
+        return self._get_xml([accession], accession)
 
-        response = self._http.get(f"{self._base_url}/xml/{accession}", headers={"Accept": "application/xml"})
+    def xml_many(self, accessions: Sequence[str]) -> bytes:
+        """Fetch several records' current XML in a single request.
+
+        The Browser API accepts a comma-separated list of accessions and
+        answers with one document containing every record it found, so a
+        caller needing the current state of a page of records pays for one
+        request rather than one per record. Records ENA does not hold are
+        simply absent from the document — unlike :meth:`xml`, a missing
+        accession is not an error, because the others still came back.
+
+        Args:
+            accessions: The accessions to fetch. Duplicates are collapsed and
+                order is preserved.
+
+        Returns:
+            The raw XML response body, or ``b""`` when ``accessions`` is empty.
+
+        Raises:
+            ValueError: One of the accessions is not a plausible accession.
+            PermissionError: ENA returned 401/403 — check the credentials.
+            LookupError: ENA holds none of these accessions (404 or empty).
+            httpx.HTTPStatusError: Any other 4xx/5xx.
+        """
+        ids = list(dict.fromkeys(a for a in accessions if a))
+        for accession in ids:
+            if not is_accession(accession):
+                raise ValueError(f"Not a plausible accession: {accession!r}")
+        if not ids:
+            return b""
+        return self._get_xml(ids, f"any of {len(ids)} accession(s)")
+
+    def _get_xml(self, ids: Sequence[str], label: str) -> bytes:
+        response = self._http.get(f"{self._base_url}/xml/{','.join(ids)}", headers={"Accept": "application/xml"})
         if response.status_code in (401, 403):
-            raise PermissionError(f"Not authorised to read {accession} — check the Webin credentials")
+            raise PermissionError(f"Not authorised to read {label} — check the Webin credentials")
         if response.status_code == 404 or not response.content.strip():
-            raise LookupError(f"ENA holds no XML for {accession}")
+            raise LookupError(f"ENA holds no XML for {label}")
         response.raise_for_status()
         return response.content
