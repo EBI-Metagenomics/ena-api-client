@@ -110,6 +110,28 @@ class AnalysisReport(_BaseReport):
     study_accession: str = ""
 
 
+class RunProcessReport(BaseModel):
+    """A run's data-file processing status from ``/report/run-process``.
+
+    Submitting reads registers the metadata immediately, but the read files
+    themselves are validated and archived afterwards — this report is how a
+    submitter finds out whether that has finished. ``process_status`` is ENA's
+    own vocabulary (``COMPLETED``, ``IN_PROGRESS``, ``ERROR``, ...) and is
+    passed through verbatim rather than mapped onto anything here.
+
+    Example:
+        >>> RunProcessReport(run_accession="ERR1", process_status="COMPLETED").process_status
+        'COMPLETED'
+    """
+
+    model_config = _ALLOW_EXTRA
+
+    run_accession: str = ""
+    process_status: str = ""
+    process_date: str = ""
+    error_message: str = ""
+
+
 class FileReport(BaseModel):
     """A submitted-file record from ``/report/files``."""
 

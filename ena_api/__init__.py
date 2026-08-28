@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from .browser import BrowserProxy, is_accession
 from .client import WebinClient
 from .config import WebinConfig
 from .models import (
@@ -9,6 +10,7 @@ from .models import (
     AnalysisReport,
     ExperimentReport,
     FileReport,
+    RunProcessReport,
     RunReport,
     SampleReport,
     StudyReport,
@@ -20,9 +22,11 @@ from .submit import SubmitProxy, parse_receipt
 __all__ = [
     "AccessionRecord",
     "AnalysisReport",
+    "BrowserProxy",
     "ExperimentReport",
     "FileReport",
     "ReportsProxy",
+    "RunProcessReport",
     "RunReport",
     "SampleReport",
     "StudyReport",
@@ -30,5 +34,6 @@ __all__ = [
     "SubmitProxy",
     "WebinClient",
     "WebinConfig",
+    "is_accession",
     "parse_receipt",
 ]

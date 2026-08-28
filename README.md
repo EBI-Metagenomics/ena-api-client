@@ -7,6 +7,9 @@ Wraps the two HTTP APIs used to submit data to and query records held under a
 
 - **Webin v2 Submission API** — submit XML payloads describing studies, samples, runs, experiments and analyses
 - **Webin Reports API** — list records (private and public) owned by the authenticated Webin account
+- **Run processing status** — `/report/run-process`: whether ENA has finished validating
+  and archiving a run's read files, which the run report itself does not say.
+- **ENA Browser API** — fetch the current XML of a record, including private ones (Webin auth)
 
 ## Installation
 
@@ -101,6 +104,19 @@ Each method returns a list of typed Pydantic models with fields such as
 `alias`, `accession`, `title`, and `status`. Records include both private
 (held) and public (released) entries owned by the Webin account.
 
+### Fetching a record's XML
+
+```python
+xml_bytes = client.browser.xml("ERS9000001")
+```
+
+The Browser API serves the *current* XML document of a registered object;
+Webin Basic auth is what makes a private (held) record readable. This is the
+first half of a safe MODIFY — an ENA MODIFY replaces the whole object, so a
+one-field change means fetch, patch, resubmit. The patching half lives in
+[`ena-submission-toolkit`](https://github.com/timrozday-mgnify/ena-submission-toolkit)
+(`records.modify_records`).
+
 ## Endpoints covered
 
 ### Webin v2 Submission API
@@ -125,12 +141,22 @@ POST it to `/ena/submit/webin-v2/submit` as well.
 | GET | `/ena/submit/report/experiments` | `client.reports.list_experiments()` |
 | GET | `/ena/submit/report/analyses` | `client.reports.list_analyses()` |
 | GET | `/ena/submit/report/files` | `client.reports.list_files()` |
+| GET | `/ena/submit/report/run-process` | `client.reports.list_run_processes()` |
+
+### ENA Browser API
+
+| Method | Endpoint | Wrapper |
+|--------|----------|---------|
+| GET | `/ena/browser/api/xml/{accession}` | `client.browser.xml(accession)` |
+| GET | `/ena/browser/api/xml/{accessions}` | `client.browser.xml_many(accessions)` |
 
 ## Error handling
 
 - HTTP 4xx/5xx → `httpx.HTTPStatusError`
 - Reports endpoint returning 404 → empty list (no records yet)
 - Reports endpoint returning 401/403 → `PermissionError`
+- Browser endpoint returning 401/403 → `PermissionError`; 404 or an empty body → `LookupError`
+- An implausible accession (anything outside `[A-Za-z0-9._-]{3,64}`) → `ValueError`, before any request is made
 
 ## Development
 
