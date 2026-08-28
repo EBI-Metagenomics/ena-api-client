@@ -112,3 +112,21 @@ EXPERIMENTS_REPORT_JSON = [
         }
     }
 ]
+
+RUN_PROCESS_REPORT_JSON = [
+    {
+        "report": {
+            "id": "ERR9000001",
+            "processStatus": "COMPLETED",
+            "processDate": "2026-01-02T03:04:05",
+        }
+    },
+    {
+        "report": {
+            "id": "ERR9000002",
+            "processStatus": "ERROR",
+            "processDate": "2026-01-02T03:04:05",
+            "errorMessage": "File checksum mismatch",
+        }
+    },
+]

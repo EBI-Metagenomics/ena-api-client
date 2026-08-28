@@ -34,6 +34,8 @@ class WebinConfig(BaseSettings):
         'https://www.ebi.ac.uk/ena/submit/webin-v2'
         >>> cfg.reports_url
         'https://www.ebi.ac.uk/ena/submit/report'
+        >>> cfg.browser_url
+        'https://www.ebi.ac.uk/ena/browser/api'
         >>> WebinConfig(webin_id="Webin-1", password="x", test=True).submit_url
         'https://wwwdev.ebi.ac.uk/ena/submit/webin-v2'
     """
@@ -52,6 +54,11 @@ class WebinConfig(BaseSettings):
     @property
     def _host(self) -> str:
         return TEST_HOST if self.test else PROD_HOST
+
+    @property
+    def browser_url(self) -> str:
+        """Base URL for the ENA Browser API (record XML)."""
+        return f"https://{self._host}/ena/browser/api"
 
     @property
     def submit_url(self) -> str:
