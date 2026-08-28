@@ -49,3 +49,16 @@ class TestXml:
         )
         assert client.browser.xml("ERS9000001") == SAMPLE_XML
         client.close()
+
+
+class TestXmlMany:
+    def test_fetches_every_accession_in_one_request(self, httpx_mock, webin_client: WebinClient):
+        httpx_mock.add_response(method="GET", url=f"{_BASE}/xml/ERR1,ERR2", content=SAMPLE_XML)
+        assert webin_client.browser.xml_many(["ERR1", "ERR2", "ERR1", ""]) == SAMPLE_XML
+
+    def test_empty_input_makes_no_request(self, webin_client: WebinClient):
+        assert webin_client.browser.xml_many([]) == b""
+
+    def test_rejects_implausible_accession(self, webin_client: WebinClient):
+        with pytest.raises(ValueError, match="Not a plausible accession"):
+            webin_client.browser.xml_many(["ERR1", "../../etc/passwd"])

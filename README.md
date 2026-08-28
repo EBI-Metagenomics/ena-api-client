@@ -7,6 +7,8 @@ Wraps the two HTTP APIs used to submit data to and query records held under a
 
 - **Webin v2 Submission API** — submit XML payloads describing studies, samples, runs, experiments and analyses
 - **Webin Reports API** — list records (private and public) owned by the authenticated Webin account
+- **Run processing status** — `/report/run-process`: whether ENA has finished validating
+  and archiving a run's read files, which the run report itself does not say.
 - **ENA Browser API** — fetch the current XML of a record, including private ones (Webin auth)
 
 ## Installation
@@ -139,12 +141,14 @@ POST it to `/ena/submit/webin-v2/submit` as well.
 | GET | `/ena/submit/report/experiments` | `client.reports.list_experiments()` |
 | GET | `/ena/submit/report/analyses` | `client.reports.list_analyses()` |
 | GET | `/ena/submit/report/files` | `client.reports.list_files()` |
+| GET | `/ena/submit/report/run-process` | `client.reports.list_run_processes()` |
 
 ### ENA Browser API
 
 | Method | Endpoint | Wrapper |
 |--------|----------|---------|
 | GET | `/ena/browser/api/xml/{accession}` | `client.browser.xml(accession)` |
+| GET | `/ena/browser/api/xml/{accessions}` | `client.browser.xml_many(accessions)` |
 
 ## Error handling
 
