@@ -7,11 +7,13 @@ both private (held) and public (released) entries.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from typing import Any, Final, TypeVar
 
 import httpx
 from pydantic import BaseModel
 
+from .browser import is_accession
 from .models import (
     AnalysisReport,
     ExperimentReport,
@@ -23,6 +25,10 @@ from .models import (
 )
 
 _DEFAULT_MAX_RESULTS: Final = 5000
+
+#: Entities whose submitted XML the Reports API serves at ``/{entity}/xml/…``.
+#: Files are absent: a submitted file is not a record with a document of its own.
+_XML_ENTITIES: Final = ("projects", "samples", "runs", "experiments", "analyses")
 
 _REPORT_FIELD_ALIASES: Final[dict[str, tuple[str, ...]]] = {
     "alias": ("alias", "studyAlias", "sampleAlias", "runAlias", "experimentAlias", "analysisAlias"),
@@ -179,6 +185,62 @@ class ReportsProxy:
     def list_files(self, max_results: int = _DEFAULT_MAX_RESULTS) -> list[FileReport]:
         """List files submitted under the Webin account."""
         return [_coerce(r, FileReport) for r in self._fetch("files", max_results)]
+
+    def xml(self, entity: str, accessions: Sequence[str]) -> bytes:
+        """The submitted XML of records this account owns, private ones included.
+
+        The Browser API (:class:`~ena_api.browser.BrowserProxy`) serves only
+        released records: it answers 404 for a private one, with or without
+        credentials. The Reports API has the account's own copy — the document
+        as submitted, checklist attributes and all — from the moment of
+        registration, which makes it the source for anything that reads a
+        record the account still holds: a listing's full field set, and the
+        current XML a MODIFY has to patch.
+
+        Scoped by ownership like every other report: an accession this account
+        did not submit is simply absent from the answer, and an unauthenticated
+        request is refused outright.
+
+        Args:
+            entity: ``projects``, ``samples``, ``runs``, ``experiments`` or
+                ``analyses`` — the same vocabulary as the list methods. ENA
+                calls a study a project here too.
+            accessions: Primary accessions (``ERS…``, ``PRJEB…``, ``ERR…``).
+                The secondary form is not matched — ENA answers with an empty
+                document rather than an error — so pass the accession a report
+                row leads with. Duplicates are collapsed, order preserved, and
+                an accession ENA has nothing for is left out of the answer
+                rather than failing it.
+
+        Returns:
+            The raw XML response body, or ``b""`` when ``accessions`` is empty.
+
+        Raises:
+            ValueError: ``entity`` is unknown, or an accession is not plausible.
+            PermissionError: ENA returned 401/403 — check the credentials.
+            LookupError: ENA returned nothing for any of these accessions.
+            httpx.HTTPStatusError: Any other 4xx/5xx.
+        """
+        if entity not in _XML_ENTITIES:
+            raise ValueError(f"No record XML for {entity!r}; expected one of {', '.join(_XML_ENTITIES)}")
+        ids = list(dict.fromkeys(a for a in accessions if a))
+        for accession in ids:
+            if not is_accession(accession):
+                raise ValueError(f"Not a plausible accession: {accession!r}")
+        if not ids:
+            return b""
+
+        url = f"{self._base_url}/{entity}/xml/{','.join(ids)}"
+        response = self._http.get(url, headers={"Accept": "application/xml"})
+        if response.status_code in (401, 403):
+            raise PermissionError(f"Reports API returned {response.status_code} for {url} — check Webin credentials")
+        # An accession this account does not own is not an error, it is an
+        # absence — and every accession being absent leaves an empty body,
+        # which ENA still calls a 200.
+        if response.status_code == 404 or not response.content.strip():
+            raise LookupError(f"The Webin account holds no XML for any of {len(ids)} accession(s)")
+        response.raise_for_status()
+        return response.content
 
     def find_runs_by_experiment_alias(
         self, aliases: set[str], *, max_results: int = _DEFAULT_MAX_RESULTS
