@@ -215,3 +215,45 @@ class TestListRunProcesses:
             json=[],
         )
         assert webin_client.reports.list_run_processes(process_status="IN_PROGRESS") == []
+
+
+class TestXml:
+    """The submitted XML of the account's own records, private ones included.
+
+    The Browser API answers 404 for a private record whatever credentials it
+    is given; this is where a MODIFY's starting document actually comes from.
+    """
+
+    XML = b'<?xml version="1.0"?><SAMPLE_SET><SAMPLE accession="ERS1"/></SAMPLE_SET>'
+
+    def test_fetches_one_record(self, httpx_mock, webin_client: WebinClient):
+        httpx_mock.add_response(method="GET", url=f"{_BASE}/samples/xml/ERS1", content=self.XML)
+        assert webin_client.reports.xml("samples", ["ERS1"]) == self.XML
+
+    def test_batches_into_one_request(self, httpx_mock, webin_client: WebinClient):
+        httpx_mock.add_response(method="GET", url=f"{_BASE}/runs/xml/ERR1,ERR2", content=self.XML)
+        assert webin_client.reports.xml("runs", ["ERR1", "ERR2", "ERR1"]) == self.XML  # duplicates collapse
+
+    def test_no_accessions_costs_no_request(self, webin_client: WebinClient):
+        assert webin_client.reports.xml("samples", []) == b""
+
+    def test_rejects_an_unknown_entity(self, webin_client: WebinClient):
+        with pytest.raises(ValueError, match="No record XML for 'files'"):
+            webin_client.reports.xml("files", ["ERS1"])
+
+    @pytest.mark.parametrize("accession", ["../../etc/passwd", "a", "x" * 65])
+    def test_rejects_implausible_accession(self, accession: str, webin_client: WebinClient):
+        with pytest.raises(ValueError, match="Not a plausible accession"):
+            webin_client.reports.xml("samples", [accession])
+
+    def test_lookup_error_when_the_account_owns_none_of_them(self, httpx_mock, webin_client: WebinClient):
+        """ENA answers 200 with an empty body for an accession this account did
+        not submit — an absence dressed as a success."""
+        httpx_mock.add_response(method="GET", url=f"{_BASE}/samples/xml/ERS1", content=b"")
+        with pytest.raises(LookupError):
+            webin_client.reports.xml("samples", ["ERS1"])
+
+    def test_permission_error_on_403(self, httpx_mock, webin_client: WebinClient):
+        httpx_mock.add_response(method="GET", url=f"{_BASE}/samples/xml/ERS1", status_code=403)
+        with pytest.raises(PermissionError):
+            webin_client.reports.xml("samples", ["ERS1"])

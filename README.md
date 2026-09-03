@@ -9,7 +9,10 @@ Wraps the two HTTP APIs used to submit data to and query records held under a
 - **Webin Reports API** — list records (private and public) owned by the authenticated Webin account
 - **Run processing status** — `/report/run-process`: whether ENA has finished validating
   and archiving a run's read files, which the run report itself does not say.
-- **ENA Browser API** — fetch the current XML of a record, including private ones (Webin auth)
+- **Record XML** — `reports.xml(entity, accessions)`: the account's own records as submitted,
+  checklist attributes and all, private ones included. This is the source a MODIFY patches.
+- **ENA Browser API** — the current XML of a *released* record, whoever submitted it. It answers
+  404 for a private record with or without credentials, which is why `reports.xml` exists.
 
 ## Installation
 
