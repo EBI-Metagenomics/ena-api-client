@@ -32,7 +32,7 @@ def is_accession(value: str | None) -> bool:
         >>> is_accession("ERS9000001"), is_accession("../../etc/passwd")
         (True, False)
     """
-    return bool(value) and _ACCESSION_RE.match(value) is not None
+    return value is not None and _ACCESSION_RE.match(value) is not None
 
 
 class BrowserProxy:

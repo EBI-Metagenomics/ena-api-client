@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
+
 import pytest
 
 from ena_api import WebinClient, WebinConfig
@@ -20,7 +22,7 @@ def webin_test_config() -> WebinConfig:
 
 
 @pytest.fixture
-def webin_client(webin_config: WebinConfig) -> WebinClient:
+def webin_client(webin_config: WebinConfig) -> Iterator[WebinClient]:
     """A WebinClient pointed at the production environment with dummy creds."""
     client = WebinClient(config=webin_config)
     yield client

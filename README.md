@@ -82,11 +82,11 @@ Cancel, suppress, kill, hold, and release existing objects without
 hand-building the action XML:
 
 ```python
-receipt = client.submit.cancel("ERZ1234567")           # remove a private object
-receipt = client.submit.suppress("ERS9000001")         # hide a public object
+receipt = client.submit.cancel("ERZ1234567")  # remove a private object
+receipt = client.submit.suppress("ERS9000001")  # hide a public object
 receipt = client.submit.hold("ERS9000001", "2026-12-31")  # (re)set the release date
-receipt = client.submit.release("ERS9000001")          # make a private object public
-receipt = client.submit.kill("ERZ1234567")             # admin-only, irreversible
+receipt = client.submit.release("ERS9000001")  # make a private object public
+receipt = client.submit.kill("ERZ1234567")  # admin-only, irreversible
 ```
 
 Each accepts an optional `alias` keyword for the generated submission

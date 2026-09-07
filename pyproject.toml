@@ -25,28 +25,29 @@ dependencies = [
     "pydantic-settings>=2.0",
 ]
 
-[project.optional-dependencies]
-dev = [
-    "pytest>=8.0",
-    "pytest-httpx>=0.30",
-    "black>=24.0",
-    "ruff>=0.5",
-    "pre-commit>=3.7",
-]
-
 [project.urls]
 Homepage = "https://github.com/timrozday/ena-api-client"
 Issues = "https://github.com/timrozday/ena-api-client/issues"
 
+# Standardised dev group across the MIMICC/ENA repos; `uv sync` installs it by
+# default, so CI needs no extra flag for it.
+[dependency-groups]
+dev = [
+    "mypy>=1.14",
+    "pre-commit>=4",
+    "pytest>=8.0",
+    "pytest-httpx>=0.30",
+    "ruff>=0.16",
+]
+
 [tool.setuptools.packages.find]
 include = ["ena_api*"]
 
+[tool.setuptools.package-data]
+ena_api = ["py.typed"]
+
 [tool.setuptools_scm]
 fallback_version = "0.1.0"
-
-[tool.black]
-line-length = 120
-target-version = ["py311"]
 
 [tool.ruff]
 line-length = 120
@@ -59,3 +60,7 @@ ignore = ["E501"]
 [tool.pytest.ini_options]
 addopts = "--doctest-modules -v"
 testpaths = ["tests", "ena_api"]
+
+[tool.mypy]
+python_version = "3.11"
+plugins = ["pydantic.mypy"]
