@@ -117,7 +117,7 @@ The Browser API serves the *current* XML document of a registered object;
 Webin Basic auth is what makes a private (held) record readable. This is the
 first half of a safe MODIFY — an ENA MODIFY replaces the whole object, so a
 one-field change means fetch, patch, resubmit. The patching half lives in
-[`ena-submission-toolkit`](https://github.com/timrozday-mgnify/ena-submission-toolkit)
+[`ena-submission-toolkit`](https://github.com/EBI-Metagenomics/ena-submission-toolkit)
 (`records.modify_records`).
 
 ## Endpoints covered
