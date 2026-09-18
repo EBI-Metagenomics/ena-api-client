@@ -28,4 +28,4 @@ jobs:
         run: uv run ruff check .
 
       - name: Type check
-        run: uv run mypy ena_api tests
+        run: uv run mypy src tests

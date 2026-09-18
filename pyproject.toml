@@ -41,6 +41,7 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
+where = ["src"]
 include = ["ena_api*"]
 
 [tool.setuptools.package-data]
@@ -58,8 +59,11 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 ignore = ["E501"]
 
 [tool.pytest.ini_options]
-addopts = "--doctest-modules -v"
-testpaths = ["tests", "ena_api"]
+addopts = "--doctest-modules -v -m 'not integration'"
+markers = [
+    "integration: requires access to live ENA services",
+]
+testpaths = ["tests", "src/ena_api"]
 
 [tool.mypy]
 python_version = "3.11"
