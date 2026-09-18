@@ -41,10 +41,11 @@ test service.
 
 ## Regenerating models
 
-`scripts/generate_models.py` implements the fetch phase: ENA's API definitions
-and report field sets into the committed `snapshots/` tree. The generate phase
-(snapshots to `src/ena_api/models/`) does not exist yet. See
-`scripts/README.md`.
+`scripts/generate_models.py` has both phases: fetch (ENA's API definitions and
+report field sets into the committed `snapshots/` tree) and generate (snapshots
+into `src/ena_api/_generated/`, which moves to `models/` once the handwritten
+`models.py` it would shadow is gone). Nothing imports the generated code yet.
+See `scripts/README.md`.
 
 Do not edit snapshots to add fields; run the script. Use `--dry-run` before a
 fetch, commit changed snapshots with their regenerated code, and keep outputs

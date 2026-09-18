@@ -23,3 +23,10 @@ jobs:
 
       - name: Test
         run: uv run pytest -vv
+
+      # A hand edit to generated code, or a snapshot committed without
+      # regenerating from it, fails here.
+      - name: Generated code is up to date
+        run: |
+          uv run scripts/generate_models.py --skip-fetch
+          git diff --exit-code src/ena_api/_generated
