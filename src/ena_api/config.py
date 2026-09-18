@@ -27,7 +27,7 @@ class WebinConfig(BaseSettings):
         test: If ``True``, target the ENA test environment (``wwwdev.ebi.ac.uk``).
 
     Example:
-        >>> cfg = WebinConfig(webin_id="Webin-1", password="secret")
+        >>> cfg = WebinConfig(webin_id="Webin-1", password="secret", test=False)
         >>> cfg.webin_id
         'Webin-1'
         >>> cfg.submit_url
