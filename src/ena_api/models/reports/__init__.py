@@ -4,8 +4,8 @@
 
 from .analyses import AnalysisReport, AnalysisReportFields
 from .experiments import ExperimentReport, ExperimentReportFields
-from .files import FileReport, FileReportFields
 from .projects import StudyReport, StudyReportFields
+from .run_files import FileReport, FileReportFields
 from .run_process import RunProcessReport, RunProcessReportFields
 from .runs import RunReport, RunReportFields
 from .samples import SampleReport, SampleReportFields

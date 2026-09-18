@@ -35,6 +35,8 @@ REPORT_ANALYSES: Final = Endpoint("GET", "/analyses", ("analysis-type", "format"
 
 REPORT_RUN_PROCESS: Final = Endpoint("GET", "/run-process", ("format", "max-results", "process-status"))
 
+REPORT_RUN_FILES: Final = Endpoint("GET", "/run-files", ("archive-status", "format", "max-results"))
+
 REPORT_PROJECTS_XML: Final = Endpoint("GET", "/projects/xml/{ids}", ("max-results",))
 
 REPORT_SAMPLES_XML: Final = Endpoint("GET", "/samples/xml/{ids}", ("max-results",))
@@ -53,6 +55,7 @@ REPORT_LIST: Final[dict[str, Endpoint]] = {
     "experiments": REPORT_EXPERIMENTS,
     "analyses": REPORT_ANALYSES,
     "run-process": REPORT_RUN_PROCESS,
+    "run-files": REPORT_RUN_FILES,
 }
 
 

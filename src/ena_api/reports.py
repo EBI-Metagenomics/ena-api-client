@@ -8,13 +8,17 @@ both private (held) and public (released) entries.
 from __future__ import annotations
 
 from collections.abc import Sequence
-from typing import Any, Final, TypeVar
+from typing import Any, Final
 
 import httpx
-from pydantic import BaseModel
 
+# Re-exported from here for one release: mimicc's tests import
+# ``ena_api.reports._coerce``.  Drop the re-export in the next minor version.
+from ._processing import _coerce
 from .browser import is_accession
+from .exceptions import ENAAuthError, ENAInvalidAccessionError, ENANotFoundError
 from .models import (
+    XML_ENTITIES,
     AnalysisReport,
     ExperimentReport,
     FileReport,
@@ -23,76 +27,9 @@ from .models import (
     SampleReport,
     StudyReport,
 )
+from .models.endpoints import REPORT_LIST, REPORT_XML
 
 _DEFAULT_MAX_RESULTS: Final = 5000
-
-#: Entities whose submitted XML the Reports API serves at ``/{entity}/xml/…``.
-#: Files are absent: a submitted file is not a record with a document of its own.
-_XML_ENTITIES: Final = ("projects", "samples", "runs", "experiments", "analyses")
-
-_REPORT_FIELD_ALIASES: Final[dict[str, tuple[str, ...]]] = {
-    "alias": ("alias", "studyAlias", "sampleAlias", "runAlias", "experimentAlias", "analysisAlias"),
-    "accession": (
-        "accession",
-        "studyAccession",
-        "sampleAccession",
-        "runAccession",
-        "experimentAccession",
-        "analysisAccession",
-        "id",
-    ),
-    "secondary_accession": ("secondaryAccession", "secondaryId"),
-    "title": ("title", "studyTitle", "sampleTitle", "experimentTitle", "analysisTitle"),
-    "status": ("releaseStatus", "status"),
-    "experiment_accession": ("experimentAccession", "experimentId"),
-    "study_accession": ("studyAccession", "studyId"),
-    "sample_accession": ("sampleAccession", "sampleId"),
-    "run_accession": ("runAccession", "runId", "id"),
-    "process_status": ("processStatus", "process_status"),
-    "process_date": ("processDate", "process_date"),
-    "error_message": ("errorMessage", "error_message", "errorMessages"),
-    "filename": ("filename", "fileName", "name"),
-    "checksum": ("checksum", "md5"),
-    "checksum_method": ("checksumMethod", "checksum_method"),
-}
-
-T = TypeVar("T", bound=BaseModel)
-
-
-def _coerce(record: dict[str, Any], model_cls: type[T]) -> T:
-    """Build a model instance from a flat report dict, trying common key aliases.
-
-    Any raw key that doesn't map to a known field is passed through unchanged
-    (relies on the model's ``extra="allow"`` config to keep it in
-    ``model_dump()``), so a Reports API field name this alias table doesn't
-    yet anticipate is still visible to callers instead of silently dropped.
-    """
-    field_names = set(model_cls.model_fields.keys())
-    # Keys reserved for other typed fields this model declares (e.g. an
-    # ExperimentReport row's "studyAccession" foreign key) — the generic
-    # "accession" field must not steal one of these just because it appears
-    # earlier in its own alias tuple than this record's own entity-typed key
-    # (e.g. "experimentAccession").
-    reserved_keys: set[str] = set()
-    for field in field_names:
-        if field != "accession":
-            reserved_keys.update(_REPORT_FIELD_ALIASES.get(field, ()))
-
-    out: dict[str, Any] = {}
-    consumed_keys: set[str] = set()
-    for field in field_names:
-        candidates = _REPORT_FIELD_ALIASES.get(field, (field,))
-        if field == "accession":
-            candidates = tuple(k for k in candidates if k not in reserved_keys)
-        for key in candidates:
-            if key in record and record[key] not in (None, ""):
-                out[field] = record[key]
-                consumed_keys.add(key)
-                break
-    for key, value in record.items():
-        if key not in consumed_keys and key not in out:
-            out[key] = value
-    return model_cls.model_validate(out)
 
 
 class ReportsProxy:
@@ -112,17 +49,17 @@ class ReportsProxy:
     def _fetch(self, entity: str, max_results: int, **extra: Any) -> list[dict[str, Any]]:
         """Issue ``GET /report/{entity}`` and return the unwrapped report dicts.
 
-        Returns ``[]`` on 404 (no records yet); raises ``PermissionError`` on
+        Returns ``[]`` on 404 (no records yet); raises ``ENAAuthError`` on
         401/403; raises ``httpx.HTTPStatusError`` on other 4xx/5xx.
         """
-        url = f"{self._base_url}/{entity}"
+        url = f"{self._base_url}{REPORT_LIST[entity].path}"
         params: dict[str, Any] = {"format": "json", "max-results": max_results, **extra}
         response = self._http.get(url, params=params)
 
         if response.status_code == 404:
             return []
         if response.status_code in (401, 403):
-            raise PermissionError(f"Reports API returned {response.status_code} for {url} — check Webin credentials")
+            raise ENAAuthError(f"Reports API returned {response.status_code} for {url} — check Webin credentials")
         response.raise_for_status()
 
         payload = response.json()
@@ -183,8 +120,14 @@ class ReportsProxy:
         return [_coerce(r, AnalysisReport) for r in self._fetch("analyses", max_results)]
 
     def list_files(self, max_results: int = _DEFAULT_MAX_RESULTS) -> list[FileReport]:
-        """List files submitted under the Webin account."""
-        return [_coerce(r, FileReport) for r in self._fetch("files", max_results)]
+        """List the read files submitted under the Webin account.
+
+        ``/report/run-files``: one row per data file of a run, with its
+        checksum and archive status. (``/report/files``, which this method
+        used to call, is not an endpoint ENA serves — it answered 404, which
+        :meth:`_fetch` turned into an empty list.)
+        """
+        return [_coerce(r, FileReport) for r in self._fetch("run-files", max_results)]
 
     def xml(self, entity: str, accessions: Sequence[str]) -> bytes:
         """The submitted XML of records this account owns, private ones included.
@@ -216,29 +159,30 @@ class ReportsProxy:
             The raw XML response body, or ``b""`` when ``accessions`` is empty.
 
         Raises:
-            ValueError: ``entity`` is unknown, or an accession is not plausible.
-            PermissionError: ENA returned 401/403 — check the credentials.
-            LookupError: ENA returned nothing for any of these accessions.
+            ENAInvalidAccessionError: ``entity`` is unknown, or an accession
+                is not plausible.
+            ENAAuthError: ENA returned 401/403 — check the credentials.
+            ENANotFoundError: ENA returned nothing for any of these accessions.
             httpx.HTTPStatusError: Any other 4xx/5xx.
         """
-        if entity not in _XML_ENTITIES:
-            raise ValueError(f"No record XML for {entity!r}; expected one of {', '.join(_XML_ENTITIES)}")
+        if entity not in XML_ENTITIES:
+            raise ENAInvalidAccessionError(f"No record XML for {entity!r}; expected one of {', '.join(XML_ENTITIES)}")
         ids = list(dict.fromkeys(a for a in accessions if a))
         for accession in ids:
             if not is_accession(accession):
-                raise ValueError(f"Not a plausible accession: {accession!r}")
+                raise ENAInvalidAccessionError(f"Not a plausible accession: {accession!r}")
         if not ids:
             return b""
 
-        url = f"{self._base_url}/{entity}/xml/{','.join(ids)}"
+        url = self._base_url + REPORT_XML[entity].path.format(ids=",".join(ids))
         response = self._http.get(url, headers={"Accept": "application/xml"})
         if response.status_code in (401, 403):
-            raise PermissionError(f"Reports API returned {response.status_code} for {url} — check Webin credentials")
+            raise ENAAuthError(f"Reports API returned {response.status_code} for {url} — check Webin credentials")
         # An accession this account does not own is not an error, it is an
         # absence — and every accession being absent leaves an empty body,
         # which ENA still calls a 200.
         if response.status_code == 404 or not response.content.strip():
-            raise LookupError(f"The Webin account holds no XML for any of {len(ids)} accession(s)")
+            raise ENANotFoundError(f"The Webin account holds no XML for any of {len(ids)} accession(s)")
         response.raise_for_status()
         return response.content
 

@@ -5,6 +5,12 @@ from __future__ import annotations
 from .browser import BrowserProxy, is_accession
 from .client import WebinClient
 from .config import WebinConfig
+from .exceptions import (
+    ENAAuthError,
+    ENAClientError,
+    ENAInvalidAccessionError,
+    ENANotFoundError,
+)
 from .models import (
     AccessionRecord,
     AnalysisReport,
@@ -23,6 +29,10 @@ __all__ = [
     "AccessionRecord",
     "AnalysisReport",
     "BrowserProxy",
+    "ENAAuthError",
+    "ENAClientError",
+    "ENAInvalidAccessionError",
+    "ENANotFoundError",
     "ExperimentReport",
     "FileReport",
     "ReportsProxy",

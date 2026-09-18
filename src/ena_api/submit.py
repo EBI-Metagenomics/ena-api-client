@@ -12,23 +12,14 @@ from typing import Final
 
 import httpx
 
-from .models import AccessionRecord, SubmissionReceipt
+from .models import RECEIPT_ENTITY_TAGS, AccessionRecord, SubmissionReceipt
+from .models.endpoints import SUBMIT, SUBMIT_POLL, SUBMIT_QUEUE
+from .models.webin import SubmissionJob
 
 _HEADERS: Final = {
     "Content-Type": "application/xml",
     "Accept": "application/xml",
 }
-
-# Receipt child tags that may carry accession info.
-_RECEIPT_ENTITY_TAGS: Final = (
-    "SAMPLE",
-    "PROJECT",
-    "STUDY",
-    "EXPERIMENT",
-    "RUN",
-    "ANALYSIS",
-    "SUBMISSION",
-)
 
 
 def parse_receipt(xml_bytes: bytes) -> SubmissionReceipt:
@@ -61,7 +52,7 @@ def parse_receipt(xml_bytes: bytes) -> SubmissionReceipt:
         errors = [f"ERROR: {err.text}" for err in msgs_el.findall("ERROR") if err.text]
 
     accessions: list[AccessionRecord] = []
-    for tag in _RECEIPT_ENTITY_TAGS:
+    for tag in RECEIPT_ENTITY_TAGS:
         for entity in root.findall(tag):
             record = AccessionRecord(
                 alias=entity.get("alias", ""),
@@ -136,7 +127,7 @@ class SubmitProxy:
         Raises:
             httpx.HTTPStatusError: On 4xx/5xx responses.
         """
-        url = f"{self._base_url}/submit"
+        url = self._base_url + SUBMIT.path
         response = self._http.post(url, content=xml_bytes, headers=_HEADERS)
         response.raise_for_status()
         return parse_receipt(response.content)
@@ -150,12 +141,16 @@ class SubmitProxy:
         Raises:
             httpx.HTTPStatusError: On 4xx/5xx responses.
         """
-        url = f"{self._base_url}/submit/queue"
+        url = self._base_url + SUBMIT_QUEUE.path
         response = self._http.post(url, content=xml_bytes, headers=_HEADERS)
         response.raise_for_status()
 
-        # ENA returns either a plain text job ID or an XML stub containing the ID.
+        # The spec says JSON (``EntityModelWebinSubmission``); the XML and
+        # plain-text forms are what this client saw before that spec existed,
+        # and stay until the test service confirms which one ENA sends.
         text = response.text.strip()
+        if text.startswith("{"):
+            return SubmissionJob.model_validate_json(response.content).submission_id
         if text.startswith("<"):
             root = ET.fromstring(response.content)
             job_id = root.get("id") or (root.findtext("ID") or "")
@@ -174,7 +169,7 @@ class SubmitProxy:
         Raises:
             httpx.HTTPStatusError: On 4xx/5xx responses other than 202 (still processing).
         """
-        url = f"{self._base_url}/submit/poll/{job_id}"
+        url = self._base_url + SUBMIT_POLL.path.format(submissionId=job_id)
         response = self._http.get(url, headers={"Accept": "application/xml"})
         if response.status_code == 202:
             return None

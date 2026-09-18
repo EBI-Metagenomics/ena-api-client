@@ -5,7 +5,7 @@
 | Phase | Direction | State |
 |---|---|---|
 | **fetch** | ENA → `snapshots/` | implemented |
-| **generate** | `snapshots/` → `src/ena_api/_generated/` | implemented |
+| **generate** | `snapshots/` → `src/ena_api/models/` | implemented |
 
 ## Snapshots
 
@@ -41,16 +41,16 @@ so the repo works even if nobody ever runs an authenticated fetch.
 
 ## Generated code
 
-Everything under `src/ena_api/_generated/` starts with an `AUTO-GENERATED`
+Everything under `src/ena_api/models/` starts with an `AUTO-GENERATED`
 header and is never edited by hand — change the generator or a snapshot and
 re-run. CI regenerates with `--skip-fetch` and fails on any diff.
 
 | Module | From |
 |---|---|
-| `_generated/reports/<entity>.py` | that entity's `fields.json` plus `REPORT_MODEL_FIELDS` and `REPORT_FIELD_ALIASES` |
-| `_generated/__init__.py` | `ReportEntity`, `REPORT_MODELS`, `XML_ENTITIES` (entities the Reports spec serves XML for), `RECEIPT_ENTITY_TAGS` (the receipt XSD's `RECEIPT` children) |
-| `_generated/endpoints.py` | the allow-listed `OPERATIONS`, with each one's query parameters as the spec lists them |
-| `_generated/webin.py` | the `EntityModelWebinSubmission` schema |
+| `models/reports/<entity>.py` | that entity's `fields.json` plus `REPORT_MODEL_FIELDS` and `REPORT_FIELD_ALIASES` |
+| `models/__init__.py` | `ReportEntity`, `REPORT_MODELS`, `XML_ENTITIES` (entities the Reports spec serves XML for), `RECEIPT_ENTITY_TAGS` (the receipt XSD's `RECEIPT` children) |
+| `models/endpoints.py` | the allow-listed `OPERATIONS`, with each one's query parameters as the spec lists them |
+| `models/webin.py` | the `EntityModelWebinSubmission` schema |
 
 Generation **fails** when an `OPERATIONS` entry, or a query parameter one of
 the proxies passes, is missing from its snapshot. That failure is the drift
@@ -58,8 +58,8 @@ alarm. A declared model field whose aliases match nothing in the snapshot is a
 warning, not an error: a key can be missing from a snapshot simply because it
 was empty in every sampled row.
 
-The output lands in `_generated/` rather than `models/` only until the
-handwritten `models.py` it would shadow is gone (Phase 4 of `CODEGEN_PLAN.md`).
+`models/__init__.py` also re-exports `types.py`'s handwritten receipt models,
+so `from ena_api.models import …` still resolves every name it used to.
 
 ## Usage
 
@@ -92,7 +92,9 @@ accession, not as a foreign key, so `StudyReport` declares `accession` and not
 
 ## Known drift
 
-`GET /report/files` answers **404** on `wwwdev`, while `list_files()` calls it
-and `_fetch` turns a 404 into `[]`. The spec has `/run-files`,
-`/analysis-files` and `/unsubmitted-files` instead. Settled in Phase 4 of
-`CODEGEN_PLAN.md`; the `files` snapshot is the seeded field set for now.
+`GET /report/files` answers **404** on `wwwdev` (checked 2026-09-18) and is not
+in the spec; `_fetch` turned that 404 into `[]`, so `list_files()` had been
+silently returning nothing. It now calls `/run-files`, which is in the spec, as
+are `/analysis-files` and `/unsubmitted-files` — neither is wrapped yet. The
+`run-files` snapshot is still the seeded field set, because the test account has
+no run files to sample.
