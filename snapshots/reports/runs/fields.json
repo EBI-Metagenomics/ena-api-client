@@ -1,0 +1,37 @@
+[
+  {
+    "columnId": "experimentAccession",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "id",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "releaseStatus",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "runAccession",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "runAlias",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "sampleAccession",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "studyAccession",
+    "description": "",
+    "type": "text"
+  }
+]

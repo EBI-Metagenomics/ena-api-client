@@ -63,7 +63,7 @@ addopts = "--doctest-modules -v -m 'not integration'"
 markers = [
     "integration: requires access to live ENA services",
 ]
-testpaths = ["tests", "src/ena_api"]
+testpaths = ["tests", "src/ena_api", "scripts"]
 
 [tool.mypy]
 python_version = "3.11"

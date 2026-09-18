@@ -1,0 +1,27 @@
+[
+  {
+    "columnId": "checksum",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "checksumMethod",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "fileName",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "id",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "runAccession",
+    "description": "",
+    "type": "text"
+  }
+]

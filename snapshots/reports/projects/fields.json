@@ -1,0 +1,67 @@
+[
+  {
+    "columnId": "alias",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "firstCreated",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "firstPublic",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "holdDate",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "id",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "releaseStatus",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "secondaryAccession",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "secondaryId",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "studyAccession",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "studyAlias",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "studyTitle",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "submissionAccountId",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "title",
+    "description": "",
+    "type": "text"
+  }
+]

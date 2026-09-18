@@ -1,0 +1,77 @@
+[
+  {
+    "columnId": "alias",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "commonName",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "firstCreated",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "firstPublic",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "id",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "releaseStatus",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "sampleAccession",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "sampleAlias",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "sampleTitle",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "scientificName",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "secondaryAccession",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "secondaryId",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "submissionAccountId",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "taxId",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "title",
+    "description": "",
+    "type": "text"
+  }
+]
