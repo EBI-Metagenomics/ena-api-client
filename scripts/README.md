@@ -5,7 +5,7 @@
 | Phase | Direction | State |
 |---|---|---|
 | **fetch** | ENA → `snapshots/` | implemented |
-| **generate** | `snapshots/` → `src/ena_api/models/` | not yet |
+| **generate** | `snapshots/` → `src/ena_api/_generated/` | implemented |
 
 ## Snapshots
 
@@ -39,12 +39,35 @@ Without credentials that fetch is skipped and the committed snapshot stands. The
 first snapshots were seeded from this repo's test fixtures (`SEED_REPORT_FIELDS`),
 so the repo works even if nobody ever runs an authenticated fetch.
 
+## Generated code
+
+Everything under `src/ena_api/_generated/` starts with an `AUTO-GENERATED`
+header and is never edited by hand — change the generator or a snapshot and
+re-run. CI regenerates with `--skip-fetch` and fails on any diff.
+
+| Module | From |
+|---|---|
+| `_generated/reports/<entity>.py` | that entity's `fields.json` plus `REPORT_MODEL_FIELDS` and `REPORT_FIELD_ALIASES` |
+| `_generated/__init__.py` | `ReportEntity`, `REPORT_MODELS`, `XML_ENTITIES` (entities the Reports spec serves XML for), `RECEIPT_ENTITY_TAGS` (the receipt XSD's `RECEIPT` children) |
+| `_generated/endpoints.py` | the allow-listed `OPERATIONS`, with each one's query parameters as the spec lists them |
+| `_generated/webin.py` | the `EntityModelWebinSubmission` schema |
+
+Generation **fails** when an `OPERATIONS` entry, or a query parameter one of
+the proxies passes, is missing from its snapshot. That failure is the drift
+alarm. A declared model field whose aliases match nothing in the snapshot is a
+warning, not an error: a key can be missing from a snapshot simply because it
+was empty in every sampled row.
+
+The output lands in `_generated/` rather than `models/` only until the
+handwritten `models.py` it would shadow is gone (Phase 4 of `CODEGEN_PLAN.md`).
+
 ## Usage
 
 ```bash
 uv run scripts/generate_models.py --dry-run     # report the writes, make none
 uv run scripts/generate_models.py               # fetch and update snapshots
-uv run scripts/generate_models.py --skip-fetch  # use committed snapshots, contact nothing
+uv run scripts/generate_models.py --skip-fetch  # generate from committed snapshots, contact nothing
+uv run scripts/generate_models.py --skip-generate  # update snapshots only
 uv run scripts/generate_models.py --ignore-snapshots          # rewrite from scratch
 uv run scripts/generate_models.py --apis reports --entities runs,experiments
 ```
@@ -56,7 +79,16 @@ with the code regenerated from them.
 
 Constants at the top of the script, not derived from ENA:
 `API_DOCS`, `RECEIPT_XSD_URL`, `REPORT_ENTITIES` (entity → class-name segment),
-`REPORT_FIELD_DESCRIPTIONS`, `SEED_REPORT_FIELDS`, `JSON_TYPE_MAP`.
+`REPORT_FIELD_DESCRIPTIONS`, `SEED_REPORT_FIELDS`, `JSON_TYPE_MAP`,
+`REPORT_FIELD_ALIASES` (normalised name → raw report keys),
+`REPORT_MODEL_FIELDS` (the fields each model declares), `FIELD_DEFAULTS`,
+`ENA_TYPE_MAP`, `OPERATIONS`, `PACKAGE`.
+
+`REPORT_MODEL_FIELDS` is not derivable from the alias table: a
+`/report/projects` row carries `studyAccession` as the record's *own*
+accession, not as a foreign key, so `StudyReport` declares `accession` and not
+`study_accession`. Every raw key no declared field maps stays an
+`extra="allow"` passthrough, which is what keeps `model_dump()` compatible.
 
 ## Known drift
 
