@@ -9,12 +9,12 @@ projects such as `ena-submission-toolkit`.
 - `src/ena_api/` contains the installable package.
 - `tests/` contains unit, golden-compatibility, and future integration tests.
 
-The current package code is handwritten. Once the generator is introduced,
-generated files will have an `AUTO-GENERATED` header and must not be edited by
-hand. Handwritten client, configuration, proxy, processing, type, and exception
-modules remain the place for behaviour that is not derived from ENA definitions.
+Everything under `src/ena_api/models/` is generated: those files carry an
+`AUTO-GENERATED` header and must not be edited by hand. Handwritten client,
+configuration, proxy, processing, type, and exception modules remain the place
+for behaviour that is not derived from ENA definitions.
 
-Keep the compatibility contract intact during the transition:
+Keep the compatibility contract intact:
 
 - Preserve the public names in `ena_api.__all__`.
 - Preserve existing `model_dump()` keys and values, including raw extra report
@@ -43,9 +43,9 @@ test service.
 
 `scripts/generate_models.py` has both phases: fetch (ENA's API definitions and
 report field sets into the committed `snapshots/` tree) and generate (snapshots
-into `src/ena_api/_generated/`, which moves to `models/` once the handwritten
-`models.py` it would shadow is gone). Nothing imports the generated code yet.
-See `scripts/README.md`.
+into `src/ena_api/models/`). `models/__init__.py` also re-exports the
+handwritten receipt models from `types.py`, so `ena_api.models` keeps every
+name it ever had. See `scripts/README.md`.
 
 Do not edit snapshots to add fields; run the script. Use `--dry-run` before a
 fetch, commit changed snapshots with their regenerated code, and keep outputs

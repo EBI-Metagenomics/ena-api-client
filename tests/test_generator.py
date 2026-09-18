@@ -115,7 +115,7 @@ def test_report_model_source(gen: ModuleType, snapshots: Path) -> None:
 def test_generate_writes_importable_modules(
     gen: ModuleType, snapshots: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    out = tmp_path / "_generated"
+    out = tmp_path / "models"
     monkeypatch.setattr(gen, "OUTPUT", out)
     gen.generate(dry_run=False, entities=["runs"])
 
@@ -129,6 +129,9 @@ def test_generate_writes_importable_modules(
     assert "ReportEntity.RUNS: RunReport" in index
     assert 'XML_ENTITIES: Final = ("runs",)' in index
     assert 'RECEIPT_ENTITY_TAGS: Final = ("SAMPLE", "DATASET")' in index
+    # The handwritten receipt models are re-exported, so `ena_api.models.X`
+    # keeps working for every name it had.
+    assert "from ..types import AccessionRecord, SubmissionReceipt" in index
     # ``links`` is HATEOAS navigation, not part of the job identity.
     assert "links" not in (out / "webin.py").read_text()
 

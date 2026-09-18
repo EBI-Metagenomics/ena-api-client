@@ -143,8 +143,9 @@ POST it to `/ena/submit/webin-v2/submit` as well.
 | GET | `/ena/submit/report/runs` | `client.reports.list_runs()` |
 | GET | `/ena/submit/report/experiments` | `client.reports.list_experiments()` |
 | GET | `/ena/submit/report/analyses` | `client.reports.list_analyses()` |
-| GET | `/ena/submit/report/files` | `client.reports.list_files()` |
 | GET | `/ena/submit/report/run-process` | `client.reports.list_run_processes()` |
+| GET | `/ena/submit/report/run-files` | `client.reports.list_files()` |
+| GET | `/ena/submit/report/{entity}/xml/{ids}` | `client.reports.xml(entity, accessions)` |
 
 ### ENA Browser API
 
@@ -153,22 +154,48 @@ POST it to `/ena/submit/webin-v2/submit` as well.
 | GET | `/ena/browser/api/xml/{accession}` | `client.browser.xml(accession)` |
 | GET | `/ena/browser/api/xml/{accessions}` | `client.browser.xml_many(accessions)` |
 
+Every path above is checked against ENA's own OpenAPI definitions: it is the
+`OPERATIONS` allow-list in `scripts/generate_models.py`, and generation fails
+if ENA stops serving one of them or drops a parameter this client passes.
+
+## Regenerating models
+
+Report row models, the endpoint table, the report-entity lookups and the
+receipt's entity tags all live under `src/ena_api/models/` and are **generated**
+from committed snapshots of ENA's definitions:
+
+```bash
+uv run scripts/generate_models.py --dry-run     # report the writes, make none
+uv run scripts/generate_models.py --skip-fetch  # regenerate from the snapshots
+uv run scripts/generate_models.py               # refresh the snapshots too
+```
+
+Don't edit anything with an `AUTO-GENERATED` header. See
+[`scripts/README.md`](scripts/README.md) for the snapshot format, what needs
+credentials, and the hand-curated configuration.
+
 ## Error handling
 
 - HTTP 4xx/5xx → `httpx.HTTPStatusError`
 - Reports endpoint returning 404 → empty list (no records yet)
-- Reports endpoint returning 401/403 → `PermissionError`
-- Browser endpoint returning 401/403 → `PermissionError`; 404 or an empty body → `LookupError`
-- An implausible accession (anything outside `[A-Za-z0-9._-]{3,64}`) → `ValueError`, before any request is made
+- Reports endpoint returning 401/403 → `ENAAuthError`
+- Browser endpoint returning 401/403 → `ENAAuthError`; 404 or an empty body → `ENANotFoundError`
+- An implausible accession (anything outside `[A-Za-z0-9._-]{3,64}`), or an unknown
+  entity → `ENAInvalidAccessionError`, before any request is made
+
+The three subclass `ENAClientError` and, respectively, `PermissionError`,
+`LookupError` and `ValueError` — so code that catches the built-ins keeps
+working.
 
 ## Development
 
 ```bash
-pip install -e ".[dev]"
-pre-commit install
-pytest
-ruff check ena_api/ tests/
-black --check ena_api/ tests/
+uv sync
+uv run pytest
+uv run pytest -m integration   # talks to ENA; report calls need credentials
+uv run mypy src tests
+uv run ruff check .
+uv run ruff format --check .
 ```
 
 ## License

@@ -10,6 +10,7 @@ from typing import Final
 
 from pydantic import BaseModel
 
+from ..types import AccessionRecord, SubmissionReceipt
 from .reports import (
     AnalysisReport,
     ExperimentReport,
@@ -30,7 +31,7 @@ class ReportEntity(str, Enum):
     EXPERIMENTS = "experiments"
     ANALYSES = "analyses"
     RUN_PROCESS = "run-process"
-    FILES = "files"
+    RUN_FILES = "run-files"
 
 
 REPORT_MODELS: Final[dict[ReportEntity, type[BaseModel]]] = {
@@ -40,7 +41,7 @@ REPORT_MODELS: Final[dict[ReportEntity, type[BaseModel]]] = {
     ReportEntity.EXPERIMENTS: ExperimentReport,
     ReportEntity.ANALYSES: AnalysisReport,
     ReportEntity.RUN_PROCESS: RunProcessReport,
-    ReportEntity.FILES: FileReport,
+    ReportEntity.RUN_FILES: FileReport,
 }
 
 #: Entities whose submitted XML the Reports API serves at ``/{entity}/xml/…``.
@@ -63,6 +64,7 @@ RECEIPT_ENTITY_TAGS: Final = (
 )
 
 __all__ = [
+    "AccessionRecord",
     "AnalysisReport",
     "ExperimentReport",
     "FileReport",
@@ -73,5 +75,6 @@ __all__ = [
     "RunReport",
     "SampleReport",
     "StudyReport",
+    "SubmissionReceipt",
     "XML_ENTITIES",
 ]

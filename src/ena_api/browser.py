@@ -18,6 +18,9 @@ from typing import Final
 
 import httpx
 
+from .exceptions import ENAAuthError, ENAInvalidAccessionError, ENANotFoundError
+from .models.endpoints import BROWSER_XML
+
 #: Deliberately strict: the accession goes straight into a URL path.
 _ACCESSION_RE: Final = re.compile(r"^[A-Za-z0-9._-]{3,64}$")
 
@@ -55,18 +58,18 @@ class BrowserProxy:
             The raw XML response body.
 
         Raises:
-            ValueError: The accession is not a plausible accession.
-            PermissionError: ENA returned 401/403 — check the credentials.
-            LookupError: ENA holds no XML for this accession (404 or empty).
+            ENAInvalidAccessionError: Not a plausible accession.
+            ENAAuthError: ENA returned 401/403 — check the credentials.
+            ENANotFoundError: ENA holds no XML for it (404 or empty).
             httpx.HTTPStatusError: Any other 4xx/5xx.
 
         Example:
             >>> BrowserProxy(httpx.Client(), "https://x/api").xml("../../etc/passwd")
             Traceback (most recent call last):
-            ValueError: Not a plausible accession: '../../etc/passwd'
+            ena_api.exceptions.ENAInvalidAccessionError: Not a plausible accession: '../../etc/passwd'
         """
         if not is_accession(accession):
-            raise ValueError(f"Not a plausible accession: {accession!r}")
+            raise ENAInvalidAccessionError(f"Not a plausible accession: {accession!r}")
         return self._get_xml([accession], accession)
 
     def xml_many(self, accessions: Sequence[str]) -> bytes:
@@ -87,24 +90,25 @@ class BrowserProxy:
             The raw XML response body, or ``b""`` when ``accessions`` is empty.
 
         Raises:
-            ValueError: One of the accessions is not a plausible accession.
-            PermissionError: ENA returned 401/403 — check the credentials.
-            LookupError: ENA holds none of these accessions (404 or empty).
+            ENAInvalidAccessionError: One of them is not a plausible accession.
+            ENAAuthError: ENA returned 401/403 — check the credentials.
+            ENANotFoundError: ENA holds none of these accessions (404 or empty).
             httpx.HTTPStatusError: Any other 4xx/5xx.
         """
         ids = list(dict.fromkeys(a for a in accessions if a))
         for accession in ids:
             if not is_accession(accession):
-                raise ValueError(f"Not a plausible accession: {accession!r}")
+                raise ENAInvalidAccessionError(f"Not a plausible accession: {accession!r}")
         if not ids:
             return b""
         return self._get_xml(ids, f"any of {len(ids)} accession(s)")
 
     def _get_xml(self, ids: Sequence[str], label: str) -> bytes:
-        response = self._http.get(f"{self._base_url}/xml/{','.join(ids)}", headers={"Accept": "application/xml"})
+        url = self._base_url + BROWSER_XML.path.format(accession=",".join(ids))
+        response = self._http.get(url, headers={"Accept": "application/xml"})
         if response.status_code in (401, 403):
-            raise PermissionError(f"Not authorised to read {label} — check the Webin credentials")
+            raise ENAAuthError(f"Not authorised to read {label} — check the Webin credentials")
         if response.status_code == 404 or not response.content.strip():
-            raise LookupError(f"ENA holds no XML for {label}")
+            raise ENANotFoundError(f"ENA holds no XML for {label}")
         response.raise_for_status()
         return response.content

@@ -174,13 +174,19 @@ class TestOtherEntities:
         )
         assert webin_client.reports.list_analyses() == []
 
-    def test_list_files_empty(self, httpx_mock, webin_client: WebinClient):
+    def test_list_files_reads_run_files(self, httpx_mock, webin_client: WebinClient):
+        """``list_files`` goes to ``/run-files``; ``/report/files`` is not an ENA endpoint."""
         httpx_mock.add_response(
             method="GET",
-            url=f"{_BASE}/files?format=json&max-results=5000",
-            json=[],
+            url=f"{_BASE}/run-files?format=json&max-results=5000",
+            json=[
+                {"report": {"id": "ERR9000001", "fileName": "r1.fastq.gz", "checksum": "abc", "checksumMethod": "MD5"}}
+            ],
         )
-        assert webin_client.reports.list_files() == []
+        files = webin_client.reports.list_files()
+        assert [(f.run_accession, f.filename, f.checksum_method) for f in files] == [
+            ("ERR9000001", "r1.fastq.gz", "MD5")
+        ]
 
 
 class TestEntriesWithoutReport:

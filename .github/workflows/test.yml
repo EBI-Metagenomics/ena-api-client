@@ -29,4 +29,4 @@ jobs:
       - name: Generated code is up to date
         run: |
           uv run scripts/generate_models.py --skip-fetch
-          git diff --exit-code src/ena_api/_generated
+          git diff --exit-code src/ena_api/models

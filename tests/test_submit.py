@@ -57,6 +57,12 @@ class TestParseReceipt:
         assert r.success is True
         assert r.accessions[0].accession == "ERP1"
 
+    def test_dataset_receipt(self):
+        """Tags the receipt XSD has that the old hand-written list didn't."""
+        xml = b'<?xml version="1.0"?><RECEIPT success="true"><DATASET alias="d1" accession="ERD1" status="PRIVATE"/></RECEIPT>'
+        r = parse_receipt(xml)
+        assert [(a.accession, a.entity_type) for a in r.accessions] == [("ERD1", "DATASET")]
+
 
 class TestSubmitXml:
     def test_success(self, httpx_mock, webin_client: WebinClient):
@@ -127,6 +133,15 @@ class TestSubmitXmlAsync:
         )
         job_id = webin_client.submit.xml_async(b"<WEBIN/>")
         assert job_id == "job-xyz"
+
+    def test_parses_json_job_id(self, httpx_mock, webin_client: WebinClient):
+        """The form the Webin spec documents: an ``EntityModelWebinSubmission``."""
+        httpx_mock.add_response(
+            method="POST",
+            url="https://www.ebi.ac.uk/ena/submit/webin-v2/submit/queue",
+            json={"submissionId": "job-json-1", "submissionAccountId": "Webin-1", "links": []},
+        )
+        assert webin_client.submit.xml_async(b"<WEBIN/>") == "job-json-1"
 
 
 class TestPoll:
