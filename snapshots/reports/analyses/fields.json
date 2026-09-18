@@ -1,0 +1,77 @@
+[
+  {
+    "columnId": "alias",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "analysisAccession",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "analysisAlias",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "analysisTitle",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "analysisType",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "analysisTypeDescription",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "firstCreated",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "firstPublic",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "id",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "projectId",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "releaseStatus",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "sampleId",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "studyAccession",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "studyId",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "submissionAccountId",
+    "description": "",
+    "type": "text"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "columnId": "errorMessage",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "id",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "processDate",
+    "description": "",
+    "type": "text"
+  },
+  {
+    "columnId": "processStatus",
+    "description": "",
+    "type": "text"
+  }
+]

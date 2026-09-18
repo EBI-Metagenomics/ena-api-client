@@ -41,7 +41,11 @@ test service.
 
 ## Regenerating models
 
-Model generation is not present yet. Do not add generated files or snapshots
-manually. Once `scripts/generate_models.py` exists, use its dry-run mode before
-a fetch, commit changed snapshots with their regenerated code, and keep
-generated outputs deterministic.
+`scripts/generate_models.py` implements the fetch phase: ENA's API definitions
+and report field sets into the committed `snapshots/` tree. The generate phase
+(snapshots to `src/ena_api/models/`) does not exist yet. See
+`scripts/README.md`.
+
+Do not edit snapshots to add fields; run the script. Use `--dry-run` before a
+fetch, commit changed snapshots with their regenerated code, and keep outputs
+deterministic — a second run must change nothing.

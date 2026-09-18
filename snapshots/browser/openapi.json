@@ -1,0 +1,3177 @@
+{
+  "components": {
+    "schemas": {
+      "Attribute": {
+        "properties": {
+          "tag": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Chromosome": {
+        "properties": {
+          "accession": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "count": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ContentRequest": {
+        "properties": {
+          "accessions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "annotationOnly": {
+            "type": "boolean"
+          },
+          "complement": {
+            "type": "boolean"
+          },
+          "download": {
+            "type": "boolean"
+          },
+          "expanded": {
+            "type": "boolean"
+          },
+          "gzip": {
+            "type": "boolean"
+          },
+          "includeLinks": {
+            "type": "boolean"
+          },
+          "lineLimit": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "range": {
+            "type": "string"
+          },
+          "sequenceType": {
+            "type": "string"
+          },
+          "set": {
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "CrossReference": {
+        "properties": {
+          "pId": {
+            "type": "string"
+          },
+          "pid": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "sId": {
+            "type": "string"
+          },
+          "sid": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "source": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Link": {
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "StreamingResponseBody": {
+        "type": "object"
+      },
+      "Summary": {
+        "properties": {
+          "accession": {
+            "type": "string"
+          },
+          "alias": {
+            "type": "string"
+          },
+          "assemblyCoverage": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "assemblyId": {
+            "type": "string"
+          },
+          "assemblyLevel": {
+            "type": "string"
+          },
+          "assemblyType": {
+            "type": "string"
+          },
+          "attributes": {
+            "items": {
+              "$ref": "#/components/schemas/Attribute"
+            },
+            "type": "array"
+          },
+          "centerName": {
+            "type": "string"
+          },
+          "chromosomes": {
+            "items": {
+              "$ref": "#/components/schemas/Chromosome"
+            },
+            "type": "array"
+          },
+          "contigs": {
+            "type": "string"
+          },
+          "dataClass": {
+            "type": "string"
+          },
+          "dataType": {
+            "enum": [
+              "ANALYSIS",
+              "ASSEMBLY",
+              "CHECKLIST",
+              "CODING",
+              "BIOSAMPLE",
+              "SAMPLE",
+              "CONTIGSET",
+              "EXPERIMENT",
+              "NONCODING",
+              "PROJECT",
+              "RUN",
+              "SEQUENCE",
+              "SEQUENCE_EXPANDED",
+              "SEQUENCE_EXPANDED_SHARDED",
+              "STUDY",
+              "SUBMISSION",
+              "TAXON"
+            ],
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "firstPublic": {
+            "type": "string"
+          },
+          "inserted": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "labName": {
+            "type": "string"
+          },
+          "lastUpdated": {
+            "type": "string"
+          },
+          "links": {
+            "items": {
+              "$ref": "#/components/schemas/Link"
+            },
+            "type": "array"
+          },
+          "merged": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "moleculeType": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "newAccession": {
+            "type": "string"
+          },
+          "parentAccession": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "program": {
+            "type": "string"
+          },
+          "project": {
+            "type": "string"
+          },
+          "publications": {
+            "items": {
+              "$ref": "#/components/schemas/CrossReference"
+            },
+            "type": "array"
+          },
+          "sample": {
+            "type": "string"
+          },
+          "scaffolds": {
+            "type": "string"
+          },
+          "searchFields": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "secondaryAccession": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "sequenceLength": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "status": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "statusDescription": {
+            "type": "string"
+          },
+          "taxon": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "updated": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "version": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "wgsSet": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "SummaryResponse": {
+        "properties": {
+          "summaries": {
+            "items": {
+              "$ref": "#/components/schemas/Summary"
+            },
+            "type": "array"
+          },
+          "total": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "VersionRecord": {
+        "properties": {
+          "accession": {
+            "type": "string"
+          },
+          "fasta": {
+            "type": "string"
+          },
+          "firstPublic": {
+            "type": "string"
+          },
+          "lastUpdated": {
+            "type": "string"
+          },
+          "secondaryAccession": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "sequenceVersion": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "xml": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Versions": {
+        "properties": {
+          "accession": {
+            "type": "string"
+          },
+          "versions": {
+            "items": {
+              "$ref": "#/components/schemas/VersionRecord"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "WebinAnnotationRecord": {
+        "properties": {
+          "analysisId": {
+            "type": "string"
+          },
+          "annotationAccRange": {
+            "type": "string"
+          },
+          "assemblyId": {
+            "type": "string"
+          },
+          "chromosomeAccRange": {
+            "type": "string"
+          },
+          "chromosomeCnt": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "contigAccRange": {
+            "type": "string"
+          },
+          "contigCnt": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "created": {
+            "type": "string"
+          },
+          "parentAnalysisId": {
+            "type": "string"
+          },
+          "parentAssemblyId": {
+            "type": "string"
+          },
+          "seqAccRange": {
+            "type": "string"
+          },
+          "sequenceCnt": {
+            "format": "int64",
+            "type": "integer"
+          },
+          "submissionAccountId": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "WebinAnnotationResponse": {
+        "properties": {
+          "data": {
+            "items": {
+              "$ref": "#/components/schemas/WebinAnnotationRecord"
+            },
+            "type": "array"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          },
+          "page": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "size": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "contact": {
+      "name": "ENA Helpdesk",
+      "url": "https://www.ebi.ac.uk/ena/browser/support"
+    },
+    "description": "Retrieval of ENA flatfile sequences, FASTA and XML",
+    "title": "ENA Browser API",
+    "version": "1.1"
+  },
+  "openapi": "3.0.1",
+  "paths": {
+    "/changelog": {
+      "get": {
+        "description": "Streams accessions that changed status within a date range from the sequence changelog API.",
+        "operationId": "getChangelog",
+        "parameters": [
+          {
+            "description": "Comma-separated status values: new, updated, suppressed, killed",
+            "in": "query",
+            "name": "status",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Start of range, inclusive. ISO 8601 datetime with timezone (e.g. 2025-01-01T00:00:00Z)",
+            "in": "query",
+            "name": "from",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "End of range, exclusive. ISO 8601 datetime with timezone (e.g. 2025-01-02T00:00:00Z)",
+            "in": "query",
+            "name": "to",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Page number (zero-based)",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Page size (1-1000)",
+            "in": "query",
+            "name": "size",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "tags": [
+          "livelist-controller"
+        ]
+      }
+    },
+    "/doc": {
+      "get": {
+        "operationId": "downloadDoc",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "View the API documentation.",
+        "tags": [
+          "content-controller"
+        ]
+      }
+    },
+    "/embl": {
+      "post": {
+        "operationId": "getFlatFilePost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Obtain records in EMBL flatfile format with max limit of 10000 accessions per request",
+        "tags": [
+          "content-controller"
+        ]
+      }
+    },
+    "/embl/ebisearch": {
+      "get": {
+        "operationId": "downloadTextFromTextSearch",
+        "parameters": [
+          {
+            "description": "The ENA data domain to search against. Is mandatory.",
+            "in": "query",
+            "name": "domain",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A set of search keywords joined by logical operators (AND, OR, NOT). Is mandatory.",
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "How many records to skip from the beginning in the results. Default value is 0.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum number of records to retrieve. Default value is 100,000. If the full result set is to be fetched, the limit should be set to 0.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get annotation data only, without the sequence.",
+            "in": "query",
+            "name": "annotationOnly",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get expanded record for CON sequences.",
+            "in": "query",
+            "name": "expanded",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a text search and download data in EMBL flat file format.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/embl/links/{linksResult}": {
+      "get": {
+        "operationId": "downloadTextLinks",
+        "parameters": [
+          {
+            "description": "The result type of the record to get links for. Links can only be retrieved for 'study', 'sample' or 'taxon' result types. Is mandatory.",
+            "in": "path",
+            "name": "linksResult",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The result type of the links to get. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The accession of the record to get links for. Is mandatory.",
+            "in": "query",
+            "name": "accession",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to include links for taxon subtree as well.",
+            "in": "query",
+            "name": "subtree",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get annotation data only, without the sequence.",
+            "in": "query",
+            "name": "annotationOnly",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get expanded record for CON sequences.",
+            "in": "query",
+            "name": "expanded",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "Get links (related ENA records) and download sequence data in EMBl flatfile format.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/embl/search": {
+      "get": {
+        "operationId": "downloadText_1",
+        "parameters": [
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A set of search conditions joined by logical operators (AND, OR, NOT) and bound by double quotes.",
+            "in": "query",
+            "name": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A list of accessions that you would like to be included with the results of your query",
+            "in": "query",
+            "name": "includeAccessions",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The accession type to include accessions",
+            "in": "query",
+            "name": "includeAccessionType",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A list of accessions that you would like to be excluded from the results of your query",
+            "in": "query",
+            "name": "excludeAccessions",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The accession type to exclude accessions",
+            "in": "query",
+            "name": "excludeAccessionType",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum number of records to retrieve. Default value is 100,000. If the full result set is to be fetched, the limit should be set to 0.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "A list of fields (comma separated) to be returned in the result. If none supplied, the accession and description/title of the main result object will be returned.",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Rule ID / Name",
+            "in": "query",
+            "name": "rule",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The data portal ID. Defaults to 'ena'.",
+            "in": "query",
+            "name": "dataPortal",
+            "required": false,
+            "schema": {
+              "enum": [
+                "ena",
+                "faang",
+                "metagenome",
+                "pathogen"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to limit the search to only DCC records. By default, all public data is also included in the search.",
+            "in": "query",
+            "name": "dccDataOnly",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Whether to include public metagenome data in the search. By default, these are not included. Note that any metagenome data associated with a DCC hub will always be included in a search against that DCC.",
+            "in": "query",
+            "name": "includeMetagenomes",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "What format the results should be returned as: TSV (Tab Separated Values) or JSON. By default, a TSV report is provided.",
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to download the result as a file, rather than read it from the stream. By default, this is false.",
+            "in": "query",
+            "name": "download",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get annotation data only, without the sequence.",
+            "in": "query",
+            "name": "annotationOnly",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get expanded record for CON sequences.",
+            "in": "query",
+            "name": "expanded",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a warehouse search and download data in EMBl flatfile format.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/embl/textsearch": {
+      "get": {
+        "operationId": "downloadTextFromTextSearch_3",
+        "parameters": [
+          {
+            "description": "The ENA data domain to search against. Is mandatory.",
+            "in": "query",
+            "name": "domain",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A set of search keywords joined by logical operators (AND, OR, NOT). Is mandatory.",
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "How many records to skip from the beginning in the results. Default value is 0.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum number of records to retrieve. Default value is 100,000. If the full result set is to be fetched, the limit should be set to 0.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get annotation data only, without the sequence.",
+            "in": "query",
+            "name": "annotationOnly",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get expanded record for CON sequences.",
+            "in": "query",
+            "name": "expanded",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a text search and download data in EMBL flat file format.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/embl/{accession}": {
+      "get": {
+        "operationId": "getFlatFile",
+        "parameters": [
+          {
+            "description": "single accession, range or comma separated list",
+            "in": "path",
+            "name": "accession",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to download the result as a file. By default, this is false.",
+            "in": "query",
+            "name": "download",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Limit the number of text lines returned. Returns full text by default or if lineLimit=0.",
+            "in": "query",
+            "name": "lineLimit",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Get annotation data only, without the sequence.",
+            "in": "query",
+            "name": "annotationOnly",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get expanded record for CON sequences.",
+            "in": "query",
+            "name": "expanded",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Only applicable for contigsets (WGS/TSA/TLS). Whether to download the  full set of sequences as opposed to the master record only. For FASTA format, set is returned by default for contigsets.",
+            "in": "query",
+            "name": "set",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Only applicable for assembly FASTA/EMBL downloads. Comma-separated assembly sequence types to include: contig, chromosome, scaffold.",
+            "in": "query",
+            "name": "sequenceType",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Obtain records in EMBL flatfile format",
+        "tags": [
+          "content-controller"
+        ]
+      }
+    },
+    "/fasta": {
+      "post": {
+        "operationId": "getFastaPost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Obtain records in FASTA file format with max limit of 10000 accessions per request",
+        "tags": [
+          "content-controller"
+        ]
+      }
+    },
+    "/fasta/ebisearch": {
+      "get": {
+        "operationId": "downloadFastaFromTextSearch_1",
+        "parameters": [
+          {
+            "description": "The ENA data domain to search against. Is mandatory.",
+            "in": "query",
+            "name": "domain",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A set of search keywords joined by logical operators (AND, OR, NOT). Is mandatory.",
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "How many records to skip from the beginning in the results. Default value is 0.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum number of records to retrieve. Default value is 100,000. If the full result set is to be fetched, the limit should be set to 0.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get the complement of the FASTA sequence.",
+            "in": "query",
+            "name": "complement",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a text search and download data in FASTA format.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/fasta/links/{linksResult}": {
+      "get": {
+        "operationId": "downloadFastaLinks",
+        "parameters": [
+          {
+            "description": "The result type of the record to get links for. Links can only be retrieved for 'study', 'sample' or 'taxon' result types. Is mandatory.",
+            "in": "path",
+            "name": "linksResult",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The result type of the links to get. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The accession of the record to get links for. Is mandatory.",
+            "in": "query",
+            "name": "accession",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to include links for taxon subtree as well.",
+            "in": "query",
+            "name": "subtree",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "Get links (related ENA records) and download sequence data in FASTA format.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/fasta/search": {
+      "get": {
+        "operationId": "downloadFasta",
+        "parameters": [
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A set of search conditions joined by logical operators (AND, OR, NOT) and bound by double quotes.",
+            "in": "query",
+            "name": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A list of accessions that you would like to be included with the results of your query",
+            "in": "query",
+            "name": "includeAccessions",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The accession type to include accessions",
+            "in": "query",
+            "name": "includeAccessionType",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A list of accessions that you would like to be excluded from the results of your query",
+            "in": "query",
+            "name": "excludeAccessions",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The accession type to exclude accessions",
+            "in": "query",
+            "name": "excludeAccessionType",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum number of records to retrieve. Default value is 100,000. If the full result set is to be fetched, the limit should be set to 0.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "A list of fields (comma separated) to be returned in the result. If none supplied, the accession and description/title of the main result object will be returned.",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Rule ID / Name",
+            "in": "query",
+            "name": "rule",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The data portal ID. Defaults to 'ena'.",
+            "in": "query",
+            "name": "dataPortal",
+            "required": false,
+            "schema": {
+              "enum": [
+                "ena",
+                "faang",
+                "metagenome",
+                "pathogen"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to limit the search to only DCC records. By default, all public data is also included in the search.",
+            "in": "query",
+            "name": "dccDataOnly",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Whether to include public metagenome data in the search. By default, these are not included. Note that any metagenome data associated with a DCC hub will always be included in a search against that DCC.",
+            "in": "query",
+            "name": "includeMetagenomes",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "What format the results should be returned as: TSV (Tab Separated Values) or JSON. By default, a TSV report is provided.",
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to download the result as a file, rather than read it from the stream. By default, this is false.",
+            "in": "query",
+            "name": "download",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get the complement of the FASTA sequence.",
+            "in": "query",
+            "name": "complement",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a warehouse search and download sequence data in FASTA format, ordered by accession Note: Only sequence_release and sequence_update result types are available currently.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/fasta/textsearch": {
+      "get": {
+        "operationId": "downloadFastaFromTextSearch",
+        "parameters": [
+          {
+            "description": "The ENA data domain to search against. Is mandatory.",
+            "in": "query",
+            "name": "domain",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A set of search keywords joined by logical operators (AND, OR, NOT). Is mandatory.",
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "How many records to skip from the beginning in the results. Default value is 0.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum number of records to retrieve. Default value is 100,000. If the full result set is to be fetched, the limit should be set to 0.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get the complement of the FASTA sequence.",
+            "in": "query",
+            "name": "complement",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a text search and download data in FASTA format.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/fasta/{accession}": {
+      "get": {
+        "operationId": "getFasta",
+        "parameters": [
+          {
+            "description": "single accession, range or comma separated list",
+            "in": "path",
+            "name": "accession",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to download the result as a file. By default, this is false.",
+            "in": "query",
+            "name": "download",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Limit the number of text lines returned. Returns full text by default or if lineLimit=0.",
+            "in": "query",
+            "name": "lineLimit",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "expanded",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get a limited segment of the FASTA sequence.",
+            "in": "query",
+            "name": "range",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Get the complement of the FASTA sequence.",
+            "in": "query",
+            "name": "complement",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Only applicable for assembly FASTA/EMBL downloads. Comma-separated assembly sequence types to include: contig, chromosome, scaffold.",
+            "in": "query",
+            "name": "sequenceType",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "fasta",
+        "tags": [
+          "content-controller"
+        ]
+      }
+    },
+    "/gff3/summary/{accession}": {
+      "get": {
+        "operationId": "getGff3FileSummary_1",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "accession",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "fileType",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "tags": [
+          "content-controller"
+        ]
+      }
+    },
+    "/gff3/{accession}": {
+      "get": {
+        "operationId": "getGff3FileSummary",
+        "parameters": [
+          {
+            "description": "single accession",
+            "in": "path",
+            "name": "accession",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to download the result as a file. By default, this is false.",
+            "in": "query",
+            "name": "download",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Limit the number of text lines returned. Returns 1000 lines by default",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 1000,
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "Get a GFF3 file by analysis accession.",
+        "tags": [
+          "content-controller"
+        ]
+      }
+    },
+    "/gff3annotation/{accession}": {
+      "get": {
+        "operationId": "getGff3Annotation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "accession",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Annotation data type: STD or ASSEMBLY",
+            "in": "query",
+            "name": "dataType",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Page number (zero-based)",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Page size (1-1000)",
+            "in": "query",
+            "name": "size",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebinAnnotationResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get GFF3 annotations for STD or ASSEMBLY accessions",
+        "tags": [
+          "content-controller"
+        ]
+      }
+    },
+    "/livelist/{result}": {
+      "get": {
+        "operationId": "getLiveList",
+        "parameters": [
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "path",
+            "name": "result",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A list of fields (comma separated) to be returned in the result. If none supplied, the accession and last_updated will be returned. For coding/noncoding parent_accession will be added.",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Exclude subproducts derived from contigset sequences",
+            "in": "query",
+            "name": "excludeSets",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a search to get all public records",
+        "tags": [
+          "livelist-controller"
+        ]
+      }
+    },
+    "/summary/{accession}": {
+      "get": {
+        "operationId": "getSummary",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "accession",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "dataType",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SummaryResponse"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "summary",
+        "tags": [
+          "content-controller"
+        ]
+      }
+    },
+    "/text/ebisearch": {
+      "get": {
+        "operationId": "downloadTextFromTextSearch_2",
+        "parameters": [
+          {
+            "description": "The ENA data domain to search against. Is mandatory.",
+            "in": "query",
+            "name": "domain",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A set of search keywords joined by logical operators (AND, OR, NOT). Is mandatory.",
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "How many records to skip from the beginning in the results. Default value is 0.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum number of records to retrieve. Default value is 100,000. If the full result set is to be fetched, the limit should be set to 0.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get annotation data only, without the sequence.",
+            "in": "query",
+            "name": "annotationOnly",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get expanded record for CON sequences.",
+            "in": "query",
+            "name": "expanded",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a text search and download data in EMBL flat file format.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/text/links/{linksResult}": {
+      "get": {
+        "operationId": "downloadTextLinks_1",
+        "parameters": [
+          {
+            "description": "The result type of the record to get links for. Links can only be retrieved for 'study', 'sample' or 'taxon' result types. Is mandatory.",
+            "in": "path",
+            "name": "linksResult",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The result type of the links to get. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The accession of the record to get links for. Is mandatory.",
+            "in": "query",
+            "name": "accession",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to include links for taxon subtree as well.",
+            "in": "query",
+            "name": "subtree",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get annotation data only, without the sequence.",
+            "in": "query",
+            "name": "annotationOnly",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get expanded record for CON sequences.",
+            "in": "query",
+            "name": "expanded",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "Get links (related ENA records) and download sequence data in EMBl flatfile format.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/text/search": {
+      "get": {
+        "operationId": "downloadText",
+        "parameters": [
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A set of search conditions joined by logical operators (AND, OR, NOT) and bound by double quotes.",
+            "in": "query",
+            "name": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A list of accessions that you would like to be included with the results of your query",
+            "in": "query",
+            "name": "includeAccessions",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The accession type to include accessions",
+            "in": "query",
+            "name": "includeAccessionType",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A list of accessions that you would like to be excluded from the results of your query",
+            "in": "query",
+            "name": "excludeAccessions",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The accession type to exclude accessions",
+            "in": "query",
+            "name": "excludeAccessionType",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum number of records to retrieve. Default value is 100,000. If the full result set is to be fetched, the limit should be set to 0.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "A list of fields (comma separated) to be returned in the result. If none supplied, the accession and description/title of the main result object will be returned.",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Rule ID / Name",
+            "in": "query",
+            "name": "rule",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The data portal ID. Defaults to 'ena'.",
+            "in": "query",
+            "name": "dataPortal",
+            "required": false,
+            "schema": {
+              "enum": [
+                "ena",
+                "faang",
+                "metagenome",
+                "pathogen"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to limit the search to only DCC records. By default, all public data is also included in the search.",
+            "in": "query",
+            "name": "dccDataOnly",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Whether to include public metagenome data in the search. By default, these are not included. Note that any metagenome data associated with a DCC hub will always be included in a search against that DCC.",
+            "in": "query",
+            "name": "includeMetagenomes",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "What format the results should be returned as: TSV (Tab Separated Values) or JSON. By default, a TSV report is provided.",
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to download the result as a file, rather than read it from the stream. By default, this is false.",
+            "in": "query",
+            "name": "download",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get annotation data only, without the sequence.",
+            "in": "query",
+            "name": "annotationOnly",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get expanded record for CON sequences.",
+            "in": "query",
+            "name": "expanded",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a warehouse search and download data in EMBl flatfile format.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/text/textsearch": {
+      "get": {
+        "operationId": "downloadTextFromTextSearch_1",
+        "parameters": [
+          {
+            "description": "The ENA data domain to search against. Is mandatory.",
+            "in": "query",
+            "name": "domain",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A set of search keywords joined by logical operators (AND, OR, NOT). Is mandatory.",
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "How many records to skip from the beginning in the results. Default value is 0.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum number of records to retrieve. Default value is 100,000. If the full result set is to be fetched, the limit should be set to 0.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get annotation data only, without the sequence.",
+            "in": "query",
+            "name": "annotationOnly",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get expanded record for CON sequences.",
+            "in": "query",
+            "name": "expanded",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a text search and download data in EMBL flat file format.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/text/{accession}": {
+      "get": {
+        "operationId": "getFlatFile_1",
+        "parameters": [
+          {
+            "description": "single accession, range or comma separated list",
+            "in": "path",
+            "name": "accession",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to download the result as a file. By default, this is false.",
+            "in": "query",
+            "name": "download",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Limit the number of text lines returned. Returns full text by default or if lineLimit=0.",
+            "in": "query",
+            "name": "lineLimit",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Get annotation data only, without the sequence.",
+            "in": "query",
+            "name": "annotationOnly",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Get expanded record for CON sequences.",
+            "in": "query",
+            "name": "expanded",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Only applicable for contigsets (WGS/TSA/TLS). Whether to download the  full set of sequences as opposed to the master record only. For FASTA format, set is returned by default for contigsets.",
+            "in": "query",
+            "name": "set",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Only applicable for assembly FASTA/EMBL downloads. Comma-separated assembly sequence types to include: contig, chromosome, scaffold.",
+            "in": "query",
+            "name": "sequenceType",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Obtain records in EMBL flatfile format",
+        "tags": [
+          "content-controller"
+        ]
+      }
+    },
+    "/tsv/ebisearch": {
+      "get": {
+        "operationId": "downloadTsvFromTextSearch_1",
+        "parameters": [
+          {
+            "description": "The ENA data domain to search against. Is mandatory.",
+            "in": "query",
+            "name": "domain",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A set of search keywords joined by logical operators (AND, OR, NOT). Is mandatory.",
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "How many records to skip from the beginning in the results. Default value is 0.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum number of records to retrieve. Default value is 100,000. If the full result set is to be fetched, the limit should be set to 0.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a text search and download data as a tsv report.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/tsv/textsearch": {
+      "get": {
+        "operationId": "downloadTsvFromTextSearch",
+        "parameters": [
+          {
+            "description": "The ENA data domain to search against. Is mandatory.",
+            "in": "query",
+            "name": "domain",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A set of search keywords joined by logical operators (AND, OR, NOT). Is mandatory.",
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "How many records to skip from the beginning in the results. Default value is 0.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum number of records to retrieve. Default value is 100,000. If the full result set is to be fetched, the limit should be set to 0.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a text search and download data as a tsv report.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/versions/{accession}": {
+      "get": {
+        "operationId": "getVersions",
+        "parameters": [
+          {
+            "description": "unversioned accession",
+            "in": "path",
+            "name": "accession",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Versions"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "versions",
+        "tags": [
+          "content-controller"
+        ]
+      }
+    },
+    "/xml": {
+      "post": {
+        "operationId": "getXmlPost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Obtain records in XML format with max limit of 10000 accessions per request",
+        "tags": [
+          "content-controller"
+        ]
+      }
+    },
+    "/xml/ebisearch": {
+      "get": {
+        "operationId": "downloadXmlFromTextSearch_1",
+        "parameters": [
+          {
+            "description": "The ENA data domain to search against. Is mandatory.",
+            "in": "query",
+            "name": "domain",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A set of search keywords joined by logical operators (AND, OR, NOT). Is mandatory.",
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "How many records to skip from the beginning in the results. Default value is 0.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum number of records to retrieve. Default value is 100,000. If the full result set is to be fetched, the limit should be set to 0.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Include Xref links. By default, this is false",
+            "in": "query",
+            "name": "includeLinks",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a text search and download data in XML format.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/xml/links/{linksResult}": {
+      "get": {
+        "operationId": "downloadXmlLinks",
+        "parameters": [
+          {
+            "description": "The result type of the record to get links for. Links can only be retrieved for 'study', 'sample' or 'taxon' result types. Is mandatory.",
+            "in": "path",
+            "name": "linksResult",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The result type of the links to get. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The accession of the record to get links for. Is mandatory.",
+            "in": "query",
+            "name": "accession",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to include links for taxon subtree as well.",
+            "in": "query",
+            "name": "subtree",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Include Xref links. By default, this is false",
+            "in": "query",
+            "name": "includeLinks",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "Get links (related ENA records) and download data in XML format. Note: This endpoint does not produce up to date ENA data.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/xml/search": {
+      "get": {
+        "operationId": "downloadXml",
+        "parameters": [
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A set of search conditions joined by logical operators (AND, OR, NOT) and bound by double quotes.",
+            "in": "query",
+            "name": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A list of accessions that you would like to be included with the results of your query",
+            "in": "query",
+            "name": "includeAccessions",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The accession type to include accessions",
+            "in": "query",
+            "name": "includeAccessionType",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A list of accessions that you would like to be excluded from the results of your query",
+            "in": "query",
+            "name": "excludeAccessions",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The accession type to exclude accessions",
+            "in": "query",
+            "name": "excludeAccessionType",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum number of records to retrieve. Default value is 100,000. If the full result set is to be fetched, the limit should be set to 0.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "A list of fields (comma separated) to be returned in the result. If none supplied, the accession and description/title of the main result object will be returned.",
+            "in": "query",
+            "name": "fields",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Rule ID / Name",
+            "in": "query",
+            "name": "rule",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The data portal ID. Defaults to 'ena'.",
+            "in": "query",
+            "name": "dataPortal",
+            "required": false,
+            "schema": {
+              "enum": [
+                "ena",
+                "faang",
+                "metagenome",
+                "pathogen"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to limit the search to only DCC records. By default, all public data is also included in the search.",
+            "in": "query",
+            "name": "dccDataOnly",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Whether to include public metagenome data in the search. By default, these are not included. Note that any metagenome data associated with a DCC hub will always be included in a search against that DCC.",
+            "in": "query",
+            "name": "includeMetagenomes",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "What format the results should be returned as: TSV (Tab Separated Values) or JSON. By default, a TSV report is provided.",
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to download the result as a file, rather than read it from the stream. By default, this is false.",
+            "in": "query",
+            "name": "download",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Include Xref links. By default, this is false",
+            "in": "query",
+            "name": "includeLinks",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a warehouse search and download data in XML format.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/xml/textsearch": {
+      "get": {
+        "operationId": "downloadXmlFromTextSearch",
+        "parameters": [
+          {
+            "description": "The ENA data domain to search against. Is mandatory.",
+            "in": "query",
+            "name": "domain",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A set of search keywords joined by logical operators (AND, OR, NOT). Is mandatory.",
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "How many records to skip from the beginning in the results. Default value is 0.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The maximum number of records to retrieve. Default value is 100,000. If the full result set is to be fetched, the limit should be set to 0.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Include Xref links. By default, this is false",
+            "in": "query",
+            "name": "includeLinks",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a text search and download data in XML format.",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    },
+    "/xml/{accession}": {
+      "get": {
+        "operationId": "getXml",
+        "parameters": [
+          {
+            "description": "single accession, range or comma separated list",
+            "in": "path",
+            "name": "accession",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Whether to download the result as a file. By default, this is false.",
+            "in": "query",
+            "name": "download",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Whether to download the result as a gzip file. By default, this is false.",
+            "in": "query",
+            "name": "gzip",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "Include Xref links. By default, this is false",
+            "in": "query",
+            "name": "includeLinks",
+            "required": false,
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamingResponseBody"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "xml",
+        "tags": [
+          "content-controller"
+        ]
+      }
+    },
+    "/{recordFormat}/textsearch/count": {
+      "get": {
+        "operationId": "textSearchCount",
+        "parameters": [
+          {
+            "description": "Perform a count for text search in the given format.",
+            "in": "path",
+            "name": "recordFormat",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The ENA data domain to search against. Is mandatory.",
+            "in": "query",
+            "name": "domain",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "The result type (data set) to search against. Is mandatory.",
+            "in": "query",
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "A set of search keywords joined by logical operators (AND, OR, NOT). Is mandatory.",
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Perform a count for the xml text search",
+        "tags": [
+          "search-controller"
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/ena/browser/api"
+    }
+  ]
+}
